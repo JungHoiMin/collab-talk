@@ -1,34 +1,46 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
-import { CreateCollaboratorDto } from './dto/create-collaborator.dto';
-import { UpdateCollaboratorDto } from './dto/update-collaborator.dto';
+import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 
 @Controller('collaborator')
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
-  @Post()
-  create(@Body() createCollaboratorDto: CreateCollaboratorDto) {
-    return this.collaboratorService.create(createCollaboratorDto);
+  @Post('/signup')
+  signup(@Body() signupDto: SignupDto): Promise<SignupResponseDto> {
+    return this.collaboratorService.signup(signupDto);
   }
 
-  @Get()
-  findAll() {
-    return this.collaboratorService.findAll();
+  @Get('/check/email/:value')
+  checkIsDuplicatedByEmail(@Param('value') email: string) {
+    return this.collaboratorService.checkExistsByEmail(email);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.collaboratorService.findOne(+id);
+  @Get('/check/phone_number/:value')
+  checkIsDuplicatedByPhoneNumber(@Param('value') phone_number: string) {
+    return this.collaboratorService.checkExistsByPhoneNumber(phone_number);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCollaboratorDto: UpdateCollaboratorDto) {
-    return this.collaboratorService.update(+id, updateCollaboratorDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.collaboratorService.remove(+id);
-  }
+  // @Get()
+  // findAll() {
+  //   return this.collaboratorService.findAll();
+  // }
+  //
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.collaboratorService.findOne(+id);
+  // }
+  //
+  // @Patch(':id')
+  // update(
+  //   @Param('id') id: string,
+  //   @Body() updateCollaboratorDto: UpdateCollaboratorDto,
+  // ) {
+  //   return this.collaboratorService.update(+id, updateCollaboratorDto);
+  // }
+  //
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.collaboratorService.remove(+id);
+  // }
 }
