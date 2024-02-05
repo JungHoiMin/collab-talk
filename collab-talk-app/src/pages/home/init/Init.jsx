@@ -1,4 +1,4 @@
-import {Stepper} from "@mui/material";
+import {Step, Stepper} from "@mui/material";
 import {useState} from "react";
 
 const steps = ['닉네임 만들기', '성별 선택하기', '프로필 사진 업로드 하기'];
@@ -21,7 +21,9 @@ const Init = () => {
           {steps.map((label, index) => {
             const stepProps = {};
             const labelProps = {};
-
+            return (
+              <Step key={label} {...stepProps}
+            )
           })}
         </Stepper>
       </div>
