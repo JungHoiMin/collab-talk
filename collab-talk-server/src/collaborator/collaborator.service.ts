@@ -1,15 +1,55 @@
-import { BadRequestException, Injectable } from "@nestjs/common";
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Collaborator } from './entities/collaborator.entity';
 import { Repository } from 'typeorm';
+import { AuthService } from '../auth/auth.service';
+import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
 
 @Injectable()
 export class CollaboratorService {
   constructor(
+    private readonly authService: AuthService,
+
     @InjectRepository(Collaborator)
     private collaboratorRepository: Repository<Collaborator>,
   ) {}
+
+  async checkPassword(passInDB, passInReq): Promise<boolean> {
+    return passInDB === passInReq;
+  }
+
+  async login(loginDto: LoginDto): Promise<LoginResponseDto> {
+    try {
+      if (!(await this.checkExistsByEmail(loginDto.email))) {
+        throw new BadRequestException('이메일이 잘못됨');
+      }
+      const collaborator = await this.collaboratorRepository
+        .createQueryBuilder()
+        .select(['uuid', 'password', 'nick_name'])
+        .where('email = :email', { email: loginDto.email })
+        .getRawOne();
+
+      if (
+        !(await this.checkPassword(collaborator.password, loginDto.password))
+      ) {
+        throw new BadRequestException('비밀번호가 잘못됨');
+      }
+
+      const token = await this.authService.jwtLogin(
+        collaborator.uuid,
+        loginDto.email,
+      );
+
+      return {
+        token,
+        email: loginDto.email,
+        nick_name: collaborator.nick_name,
+      };
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
+  }
 
   async checkExistsByEmail(value: string): Promise<boolean> {
     return await this.collaboratorRepository
@@ -34,7 +74,7 @@ export class CollaboratorService {
         .execute();
       return await this.collaboratorRepository
         .createQueryBuilder()
-        .select(['uuid', 'name'])
+        .select(['name'])
         .where('email = :email', { email: signupDto.email })
         .getRawOne();
     } catch (e) {

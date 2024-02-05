@@ -6,6 +6,5 @@ export class SignupDto {
 }
 
 export class SignupResponseDto {
-  uuid: string;
   name: string;
 }

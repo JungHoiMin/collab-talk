@@ -1,11 +1,16 @@
 import { Controller, Post, Body, Get, Param } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
+import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
 
 @Controller('collaborator')
 export class CollaboratorController {
   constructor(private readonly collaboratorService: CollaboratorService) {}
 
+  @Post('/login')
+  login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
+    return this.collaboratorService.login(loginDto);
+  }
   @Post('/signup')
   signup(@Body() signupDto: SignupDto): Promise<SignupResponseDto> {
     return this.collaboratorService.signup(signupDto);
