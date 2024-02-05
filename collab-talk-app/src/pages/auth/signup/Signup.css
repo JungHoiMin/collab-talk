@@ -1,0 +1,38 @@
+.ctSignupMain {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 80vh;
+}
+
+.ctLogo {
+  width: 80vw;
+  min-width: 600px;
+  max-width: 800px;
+  margin-bottom: 120px;
+}
+
+.ctSignupMain > div {
+  width: 400px;
+  margin-top: 10px;
+}
+
+.ctInput {
+  width: 300px;
+}
+
+.ctCheckButton{
+  width: 100px;
+}
+
+.ctSubmitButton {
+  width: 300px;
+}
+
+.ctWarningText {
+  color: red;
+  font-style: italic;
+  font-weight: bold;
+  margin: 0 auto;
+}
