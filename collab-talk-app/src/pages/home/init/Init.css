@@ -1,3 +1,18 @@
+.ctInitMain {
+    height: 80vh;
+}
+
+.ctStepper {
+    margin-top: 60px;
+}
+
+.ctContent {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
 .ctVisuallyHidden {
     opacity: 0;
     overflow: hidden;
@@ -5,4 +20,28 @@
     width: 100%;
     height: 100%;
     cursor: pointer;
+}
+
+.ctDescription {
+    margin-top: 6em;
+}
+
+.ctContentBody {
+    margin-top: 80px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.ctInput {
+    width: 300px;
+    text-align: center;
+}
+
+.ctImage {
+    border: cadetblue 6px solid;
+    width: 260px;
+    height: 260px;
+    object-fit: contain;
+    border-radius: 180px;
 }

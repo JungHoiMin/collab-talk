@@ -1,0 +1,27 @@
+.ctLoginMain {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 80vh;
+}
+
+.ctLoginMain > div {
+    width: 400px;
+    margin-top: 10px;
+}
+
+.ctLogo {
+    width: 80vw;
+    min-width: 600px;
+    max-width: 800px;
+    margin-bottom: 120px;
+}
+
+.ctInput {
+    width: 300px;
+}
+
+.ctSubmitButton {
+    width: 300px;
+}

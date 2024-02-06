@@ -1,3 +1,4 @@
+import "./Login.css"
 import imgLogo from '../../../images/logo.png'
 import {Button, TextField} from "@mui/material";
 import useInputState from "../../../hooks/InputState";
@@ -35,10 +36,13 @@ const Login = () => {
           navigate('/home');
         }
       })
+        .catch((err) => {
+          console.log(err)
+        })
   }
   return (
     <>
-      <div className="ctSignupMain">
+      <div className="ctLoginMain">
         <img className="ctLogo" src={imgLogo} alt="logo"/>
         <div>
           <TextField className="ctInput" variant="standard" label="이메일" type="email" onChange={onChangeEmail}/>
