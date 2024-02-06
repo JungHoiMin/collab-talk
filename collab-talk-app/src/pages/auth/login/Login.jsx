@@ -24,10 +24,10 @@ const Login = () => {
     })
       .then((res) => {
         console.log(res);
-        const {token, email, nick_name} = res.data;
+        const {token, email, name, nick_name} = res.data;
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('email', email);
-
+        sessionStorage.setItem('name', name);
         if (nick_name === '')
           navigate('/home/init');
         else{

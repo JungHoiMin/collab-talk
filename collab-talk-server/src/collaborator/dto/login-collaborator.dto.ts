@@ -6,5 +6,6 @@ export class LoginDto {
 export class LoginResponseDto {
   token: string;
   email: string;
+  name: string;
   nick_name: string;
 }

@@ -1,0 +1,8 @@
+.ctVisuallyHidden {
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+}

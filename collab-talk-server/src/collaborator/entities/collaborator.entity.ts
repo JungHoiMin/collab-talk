@@ -26,7 +26,7 @@ export class Collaborator {
   phone_number: string;
 
   @Column('varchar', { length: 1, nullable: true })
-  sex: string;
+  gender: string;
 
   @Column({ default: 'default' })
   img_main_uuid: string;

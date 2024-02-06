@@ -26,7 +26,7 @@ export class CollaboratorService {
       }
       const collaborator = await this.collaboratorRepository
         .createQueryBuilder()
-        .select(['uuid', 'password', 'nick_name'])
+        .select(['uuid', 'password', 'name', 'nick_name'])
         .where('email = :email', { email: loginDto.email })
         .getRawOne();
 
@@ -44,6 +44,7 @@ export class CollaboratorService {
       return {
         token,
         email: loginDto.email,
+        name: collaborator.name,
         nick_name: collaborator.nick_name,
       };
     } catch (e) {
