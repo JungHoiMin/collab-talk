@@ -1,5 +1,5 @@
 import './App.css';
-import {Route, Routes} from "react-router-dom";
+import {Navigate, Route, Routes} from "react-router-dom";
 import Signup from "./pages/auth/signup/Signup";
 import Login from "./pages/auth/login/Login";
 import Home from "./pages/home/Home";
@@ -8,6 +8,7 @@ import Init from "./pages/home/init/Init";
 const App = () => {
   return (
       <Routes>
+        <Route path="/" element={ <Navigate replace to="/auth/login" />} />
         <Route path="/auth/*">
           <Route path="signup" element={<Signup />} />
           <Route path="login" element={<Login />} />

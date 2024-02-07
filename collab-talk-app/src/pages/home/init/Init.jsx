@@ -15,6 +15,7 @@ import {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import useInputState from "../../../hooks/InputState";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import {axiosInstance} from "../../../manager/AxiosInstance";
 
 const steps = ['닉네임 만들기', '성별 선택하기', '프로필 사진 업로드 하기'];
 
@@ -24,29 +25,42 @@ const Init = () => {
   const [nickname, setNickname, onChangeNickname] = useInputState('');
   const [gender, , onChangeGender] = useInputState('M');
   const [imageSource, setImageSource] = useState(null);
-
+  const [previewImageSource, setPreviewImageSource] = useState(null)
 
   const onClickImageUpload = useCallback((e) => {
     const selectedFile = e.target.files[0];
+    setImageSource(selectedFile);
+
     const reader = new FileReader();
     reader.readAsDataURL(selectedFile);
 
     return new Promise((resolve) => {
       reader.onload = () => {
-        setImageSource(reader.result || null);
+        setPreviewImageSource(reader.result || null);
         resolve();
       }
     })
-
   }, []);
 
   const onClickNext = useCallback(() => {
     setActiveStep((prev) => prev +1);
     if (activeStep >= steps.length - 1){
+      if (imageSource !== null){
+        const data = new FormData();
+        data.append('image_profile', imageSource)
+        axiosInstance.post('/collaborator/init/image', data)
+            .then((res) => {
+              console.log(res);
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+      }
+
       navigate('/home');
     }
 
-  }, [activeStep]);
+  }, [activeStep, imageSource]);
 
   const onClickBack = useCallback(() => {
     setActiveStep((current) => (current - 1))
@@ -102,7 +116,7 @@ const Init = () => {
               <div>
                 <img
                     className="ctImage"
-                    src={imageSource !== null ? imageSource : default_profile}
+                    src={previewImageSource !== null ? previewImageSource : default_profile}
                     alt="preview"/>
                 </div>
               <div>
