@@ -6,12 +6,15 @@ import {
   Param,
   UploadedFile,
   UseInterceptors,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOption } from "./utils/multer.setting";
+import { multerOption } from './utils/multer.setting';
+import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 
 @Controller('collaborator')
 export class CollaboratorController {
@@ -37,32 +40,10 @@ export class CollaboratorController {
   }
 
   @Post('/init/image')
-  @UseInterceptors(FileInterceptor('image_profile', multerOption))
-  init(@UploadedFile() file: Express.Multer.File) {
-    console.log(file);
-
+  @UseGuards(JwtAuthGuard)
+  @UseInterceptors(FileInterceptor('profile_image', multerOption))
+  init(@Req() req, @UploadedFile() file: Express.Multer.File) {
+    console.log(req.user.uuid);
+    return { fileName: file.filename };
   }
-
-  // @Get()
-  // findAll() {
-  //   return this.collaboratorService.findAll();
-  // }
-  //
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.collaboratorService.findOne(+id);
-  // }
-  //
-  // @Patch(':id')
-  // update(
-  //   @Param('id') id: string,
-  //   @Body() updateCollaboratorDto: UpdateCollaboratorDto,
-  // ) {
-  //   return this.collaboratorService.update(+id, updateCollaboratorDto);
-  // }
-  //
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.collaboratorService.remove(+id);
-  // }
 }

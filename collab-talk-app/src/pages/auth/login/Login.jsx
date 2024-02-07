@@ -2,8 +2,9 @@ import "./Login.css"
 import imgLogo from '../../../images/logo.png'
 import {Button, TextField} from "@mui/material";
 import useInputState from "../../../hooks/InputState";
-import {axiosInstance} from "../../../manager/AxiosInstance";
+import {axiosInstance, setAuthorizationToken} from "../../../apis/AxiosInstance";
 import {useNavigate} from "react-router-dom";
+import {login} from "../../../apis/auth/AuthApi";
 const Login = () => {
   const navigate = useNavigate();
   const [email, , onChangeEmail] = useInputState('');
@@ -20,15 +21,15 @@ const Login = () => {
       return;
     }
 
-    axiosInstance.post('collaborator/login', {
-      email, password
-    })
+    login(email, password)
       .then((res) => {
-        console.log(res);
-        const {token, email, name, nick_name} = res.data;
+        const {token, email, name, nick_name} = res;
+        sessionStorage.clear();
         sessionStorage.setItem('token', token);
         sessionStorage.setItem('email', email);
         sessionStorage.setItem('name', name);
+        setAuthorizationToken(token);
+
         if (nick_name === '')
           navigate('/home/init');
         else{

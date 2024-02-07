@@ -15,7 +15,8 @@ import {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import useInputState from "../../../hooks/InputState";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {axiosInstance} from "../../../manager/AxiosInstance";
+import {axiosInstance} from "../../../apis/AxiosInstance";
+import {initProfileImage} from "../../../apis/home/init/InitApi";
 
 const steps = ['닉네임 만들기', '성별 선택하기', '프로필 사진 업로드 하기'];
 
@@ -46,9 +47,7 @@ const Init = () => {
     setActiveStep((prev) => prev +1);
     if (activeStep >= steps.length - 1){
       if (imageSource !== null){
-        const data = new FormData();
-        data.append('image_profile', imageSource)
-        axiosInstance.post('/collaborator/init/image', data)
+        initProfileImage(imageSource)
             .then((res) => {
               console.log(res);
             })
