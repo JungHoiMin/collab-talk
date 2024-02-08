@@ -5,7 +5,10 @@ import useInputState from "../../../hooks/InputState";
 import {axiosInstance, setAuthorizationToken} from "../../../apis/AxiosInstance";
 import {useNavigate} from "react-router-dom";
 import {login} from "../../../apis/auth/AuthApi";
+import {useDispatch} from "react-redux";
+import {setEmail, setName, setNickName, setToken} from "../../../stores/UserInfoSlice";
 const Login = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [email, , onChangeEmail] = useInputState('');
   const [password, , onChangePassword] = useInputState('');
@@ -24,16 +27,15 @@ const Login = () => {
     login(email, password)
       .then((res) => {
         const {token, email, name, nick_name} = res;
-        sessionStorage.clear();
-        sessionStorage.setItem('token', token);
-        sessionStorage.setItem('email', email);
-        sessionStorage.setItem('name', name);
+        dispatch(setToken(token));
+        dispatch(setEmail(email));
+        dispatch(setName(name));
         setAuthorizationToken(token);
 
         if (nick_name === '')
           navigate('/home/init');
         else{
-          sessionStorage('nick_name', nick_name);
+          dispatch(setNickName(nick_name));
           navigate('/home');
         }
       })

@@ -4,6 +4,7 @@ import Signup from "./pages/auth/signup/Signup";
 import Login from "./pages/auth/login/Login";
 import Home from "./pages/home/Home";
 import Init from "./pages/home/init/Init";
+import AuthRouter from "./pages/AuthRouter";
 
 const App = () => {
   return (
@@ -14,8 +15,8 @@ const App = () => {
           <Route path="login" element={<Login />} />
         </Route>
         <Route path="/home/*">
-          <Route path="" element={<Home />} />
-          <Route path="init" element={<Init /> } />
+          <Route path="" element={<AuthRouter element={<Home/>} />} />
+          <Route path="init" element={<AuthRouter element={<Init/>} />} />
         </Route>
       </Routes>
   );
