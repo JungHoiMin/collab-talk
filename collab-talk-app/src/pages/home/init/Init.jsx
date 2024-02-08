@@ -15,7 +15,6 @@ import {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
 import useInputState from "../../../hooks/InputState";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {axiosInstance} from "../../../apis/AxiosInstance";
 import {initProfile, initProfileImage} from "../../../apis/home/init/InitApi";
 
 const steps = ['닉네임 만들기', '성별 선택하기', '프로필 사진 업로드 하기'];
