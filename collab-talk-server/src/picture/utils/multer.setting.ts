@@ -3,14 +3,15 @@ import { diskStorage } from 'multer';
 import * as mime from 'mime-types';
 import * as fs from 'fs';
 
-const uploadFolderPath = 'D:/uploadedImages/temp/';
+export const uploadFolderPath = 'D:/uploadedImages/';
+export const uploadTempFolderPath = uploadFolderPath + 'temp/';
 export const multerOption: MulterOptions = {
   storage: diskStorage({
     destination: (req, file, cb) => {
-      if (!fs.existsSync(uploadFolderPath)) {
-        fs.mkdirSync(uploadFolderPath, { recursive: true });
+      if (!fs.existsSync(uploadTempFolderPath)) {
+        fs.mkdirSync(uploadTempFolderPath, { recursive: true });
       }
-      cb(null, uploadFolderPath);
+      cb(null, uploadTempFolderPath);
     },
     filename(req, file, cb) {
       const date = new Date();

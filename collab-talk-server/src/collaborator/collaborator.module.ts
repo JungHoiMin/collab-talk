@@ -12,5 +12,6 @@ import { AuthModule } from '../auth/auth.module';
   ],
   controllers: [CollaboratorController],
   providers: [CollaboratorService],
+  exports: [CollaboratorService],
 })
 export class CollaboratorModule {}

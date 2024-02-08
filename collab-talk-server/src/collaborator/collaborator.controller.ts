@@ -4,17 +4,14 @@ import {
   Body,
   Get,
   Param,
-  UploadedFile,
-  UseInterceptors,
   UseGuards,
   Req,
 } from '@nestjs/common';
 import { CollaboratorService } from './collaborator.service';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { multerOption } from './utils/multer.setting';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
+import {InitDto} from "./dto/init-collaborator.dto";
 
 @Controller('collaborator')
 export class CollaboratorController {
@@ -39,11 +36,9 @@ export class CollaboratorController {
     return this.collaboratorService.checkExistsByPhoneNumber(phone_number);
   }
 
-  @Post('/init/image')
+  @Post('/init')
   @UseGuards(JwtAuthGuard)
-  @UseInterceptors(FileInterceptor('profile_image', multerOption))
-  init(@Req() req, @UploadedFile() file: Express.Multer.File) {
-    console.log(req.user.uuid);
-    return { fileName: file.filename };
+  initProfile(@Req() req: any, @Body() initDto: InitDto) {
+    return this.collaboratorService.initProfile(req.user.uuid, initDto);
   }
 }

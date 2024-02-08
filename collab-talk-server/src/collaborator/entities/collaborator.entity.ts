@@ -29,10 +29,10 @@ export class Collaborator {
   gender: string;
 
   @Column({ default: 'default' })
-  img_main_uuid: string;
+  img_main_name: string;
 
   @Column({ default: 'default' })
-  img_background_uuid: string;
+  img_background_name: string;
 
   @CreateDateColumn()
   created_at: Date;

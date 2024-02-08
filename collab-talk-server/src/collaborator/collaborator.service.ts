@@ -1,10 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Collaborator } from './entities/collaborator.entity';
 import { Repository } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
+import { InitDto } from './dto/init-collaborator.dto';
 
 @Injectable()
 export class CollaboratorService {
@@ -47,8 +48,8 @@ export class CollaboratorService {
         name: collaborator.name,
         nick_name: collaborator.nick_name,
       };
-    } catch (e) {
-      throw new BadRequestException(e);
+    } catch (err) {
+      throw new BadRequestException(err);
     }
   }
 
@@ -78,25 +79,35 @@ export class CollaboratorService {
         .select(['name'])
         .where('email = :email', { email: signupDto.email })
         .getRawOne();
-    } catch (e) {
-      console.log(e);
-      throw new BadRequestException(e);
+    } catch (err) {
+      throw new err;
+    }
+  }
+  async updateProfileImage(uuid: string, imageFileName: string) {
+    try {
+      await this.collaboratorRepository
+        .createQueryBuilder()
+        .update(Collaborator)
+        .set({ img_main_name: imageFileName })
+        .where('uuid = :uuid', { uuid })
+        .execute();
+      return 'Ok';
+    } catch (err) {
+      return err;
     }
   }
 
-  // findAll() {
-  //   return `This action returns all collaborator`;
-  // }
-  //
-  // findOne(id: number) {
-  //   return `This action returns a #${id} collaborator`;
-  // }
-  //
-  // update(id: number, updateCollaboratorDto: UpdateCollaboratorDto) {
-  //   return `This action updates a #${id} collaborator`;
-  // }
-  //
-  // remove(id: number) {
-  //   return `This action removes a #${id} collaborator`;
-  // }
+  async initProfile(uuid: string, initDto: InitDto) {
+    try {
+      await this.collaboratorRepository
+        .createQueryBuilder()
+        .update(Collaborator)
+        .set(initDto)
+        .where('uuid = :uuid', { uuid })
+        .execute();
+      return 'Ok';
+    } catch (err) {
+      return err;
+    }
+  }
 }
