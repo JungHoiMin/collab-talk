@@ -1,11 +1,13 @@
 import {
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 
-@Entity()
+@Entity('tbl_collaborator')
 export class Collaborator {
   @PrimaryGeneratedColumn('uuid')
   uuid: string;
@@ -13,7 +15,7 @@ export class Collaborator {
   @Column('varchar', { length: 320, nullable: false, unique: true })
   email: string;
 
-  @Column('varchar', { length: 500, nullable: false })
+  @Column('text', { nullable: false })
   password: string;
 
   @Column('varchar', { length: 80, nullable: false })
@@ -36,4 +38,10 @@ export class Collaborator {
 
   @CreateDateColumn()
   created_at: Date;
+
+  @BeforeInsert()
+  async setPassword(password: string) {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(password || this.password, salt);
+  }
 }

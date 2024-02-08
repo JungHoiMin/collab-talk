@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity()
+@Entity('tbl_picture')
 export class Picture {
   @PrimaryGeneratedColumn()
   id: number;

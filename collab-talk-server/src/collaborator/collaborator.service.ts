@@ -1,4 +1,4 @@
-import { BadRequestException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Collaborator } from './entities/collaborator.entity';
@@ -6,6 +6,7 @@ import { Repository } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
 import { InitDto } from './dto/init-collaborator.dto';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CollaboratorService {
@@ -16,8 +17,8 @@ export class CollaboratorService {
     private collaboratorRepository: Repository<Collaborator>,
   ) {}
 
-  async checkPassword(passInDB, passInReq): Promise<boolean> {
-    return passInDB === passInReq;
+  async checkPassword(passInDB: string, passInReq: string): Promise<boolean> {
+    return await bcrypt.compare(passInReq, passInDB);
   }
 
   async login(loginDto: LoginDto): Promise<LoginResponseDto> {
@@ -80,7 +81,7 @@ export class CollaboratorService {
         .where('email = :email', { email: signupDto.email })
         .getRawOne();
     } catch (err) {
-      throw new err;
+      throw new err();
     }
   }
   async updateProfileImage(uuid: string, imageFileName: string) {
