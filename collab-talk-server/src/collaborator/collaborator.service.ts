@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Collaborator } from './entities/collaborator.entity';
-import { Repository } from 'typeorm';
+import { BeforeInsert, Repository } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
 import { InitDto } from './dto/init-collaborator.dto';
@@ -69,11 +69,16 @@ export class CollaboratorService {
 
   async signup(signupDto: SignupDto): Promise<SignupResponseDto> {
     try {
+      const { password, ...data } = signupDto;
+
+      const salt = await bcrypt.genSalt();
+      const encryptedPassword = await bcrypt.hash(password, salt);
+
       await this.collaboratorRepository
         .createQueryBuilder()
         .insert()
         .into(Collaborator)
-        .values(signupDto)
+        .values({ ...data, password: encryptedPassword })
         .execute();
       return await this.collaboratorRepository
         .createQueryBuilder()

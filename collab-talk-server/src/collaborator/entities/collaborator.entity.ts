@@ -38,10 +38,4 @@ export class Collaborator {
 
   @CreateDateColumn()
   created_at: Date;
-
-  @BeforeInsert()
-  async setPassword(password: string) {
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(password || this.password, salt);
-  }
 }
