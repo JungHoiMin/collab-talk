@@ -1,10 +1,22 @@
 import React from "react";
+import {CTTitleBar} from "@pages/home/HomeComponents";
+
 
 const Home = () => {
+
   return (
-    <React.Fragment>
-      <div>홈이다.</div>
-    </React.Fragment>
+    <>
+      <div>
+        <CTTitleBar />
+        {/*<Drawer variant="permanent">*/}
+        {/*  <List component="nav">*/}
+        {/*    <ListItemButton>*/}
+        {/*      <ListItemText primary="Daa"/>*/}
+        {/*    </ListItemButton>*/}
+        {/*  </List>*/}
+        {/*</Drawer>*/}
+      </div>
+    </>
   )
 }
 

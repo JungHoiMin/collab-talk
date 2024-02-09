@@ -20,10 +20,22 @@ export const userInfoSlice = createSlice({
     },
     setNickName: (state, action) => {
       state.nickName = action.payload
-    }
-  }
+    },
+    clearUserInfo: (state) => {
+      state.token = '';
+      state.email = '';
+      state.name = '';
+      state.nickName = '';
+    },
+  },
 })
 
-export const { setToken, setEmail, setName, setNickName } = userInfoSlice.actions
+export const {
+  setToken,
+  setEmail,
+  setName,
+  setNickName,
+  clearUserInfo,
+} = userInfoSlice.actions
 
 export default userInfoSlice.reducer
