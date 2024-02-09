@@ -2,10 +2,11 @@ import {AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Too
 import logo from "@images/logo.png";
 import default_profile from "@images/default-profile.png";
 import React, {useCallback, useEffect, useState} from "react";
-import {useAppDispatch, useAppSelector} from "@hooks/hooks";
+import {useAppDispatch} from "@hooks/hooks";
 import {clearUserInfo} from "@stores/UserInfoSlice";
 import {useNavigate} from "react-router-dom";
 import {loadProfileMainImageSource} from "@apis/home/HomeApi";
+import {setAuthorizationToken} from "@apis/AxiosInstance";
 
 const settings = [
   { label: 'profile', value: '프로필' },
@@ -18,8 +19,7 @@ export const CTTitleBar = () => {
   const navigate = useNavigate();
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const [imageSource, setImageSource] = useState<ArrayBuffer | null | string>(null);
-  const token = useAppSelector((state) => state.userInfo.token)
+  const [imageUrl, setImageUrl] = useState<null | string>(null);
   const onClickOpenUserMenu = useCallback((e: any) => {
     setAnchorElUser(e.currentTarget);
   }, [])
@@ -34,17 +34,16 @@ export const CTTitleBar = () => {
       case 'logout':
         dispatch(clearUserInfo());
         sessionStorage.clear();
+        setAuthorizationToken('');
         navigate('/auth/login')
         break;
     }
   }, []);
 
   useEffect(() => {
-    console.log(token)
     loadProfileMainImageSource()
       .then((res) => {
-        console.log(res)
-        setImageSource(res)
+        setImageUrl(res)
       }).catch((err) => {
         console.log(err)
     })
@@ -56,13 +55,11 @@ export const CTTitleBar = () => {
         <Toolbar disableGutters>
           <img width="200px" src={logo} alt="logo"/>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
-            <button onClick={() => {console.log(token)}} > 토큰확인 </button>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="더보기...">
               <IconButton onClick={onClickOpenUserMenu} sx={{ p: 0}} >
-                <img width="40px" src={imageSource || default_profile} alt="img"></img>
-                {/*<Avatar alt="Profile-Image" src={imageSource || default_profile} />*/}
+                <Avatar alt="Profile-Image" src={imageUrl || default_profile} />
               </IconButton>
             </Tooltip>
             <Menu
