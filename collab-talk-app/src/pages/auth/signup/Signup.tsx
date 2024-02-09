@@ -1,44 +1,45 @@
+import React from "react";
 import "./Signup.css"
-import imgLogo from "../../../images/logo.png"
-import useInputState from "../../../hooks/InputState";
-import {axiosInstance} from "../../../apis/AxiosInstance";
+import imgLogo from "@images/logo.png"
+import useInputState from "@hooks/InputState";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
 import {useCallback, useEffect, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {checkEmailDuplication, checkPhoneNumberDuplication, signup} from "../../../apis/auth/AuthApi";
+import {checkEmailDuplication, checkPhoneNumberDuplication, signup} from "@apis/auth/AuthApi";
 
 const Signup = () => {
   const navigate = useNavigate();
-  const [email, setEmail,] = useInputState('');
-  const [emailCheck, setEmailCheck,] = useInputState(false);
-  const [password, setPassword,] = useInputState('');
-  const [passwordCheck, setPasswordCheck,] = useInputState('');
-  const [name, , onChangeName] = useInputState('');
-  const [phoneNumber, setPhoneNumber,] = useInputState('');
-  const [phoneNumberCheck, setPhoneNumberCheck,] = useInputState(false);
-  const [mismatchError, setMismatchError] = useState(false);
-  const [successSignup, setSuccessSignup] = useState(false);
-  let [linkTime, setLinkTime] = useState(null);
+  const [email, setEmail] = useState<string>('');
+  const [emailCheck, setEmailCheck] = useState<boolean>(false);
+  const [password, setPassword] = useState<string>('');
+  const [passwordCheck, setPasswordCheck] = useState<string>('');
+  const [name, , onChangeName] = useInputState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [phoneNumberCheck, setPhoneNumberCheck] = useState<boolean>(false);
+  const [mismatchError, setMismatchError] = useState<boolean>(false);
+  const [successSignup, setSuccessSignup] = useState<boolean>(false);
+  let [linkTime, setLinkTime] = useState<number>();
 
   useEffect(() => {
-    if (linkTime === null)
+    if (linkTime === undefined)
       return
 
     if (linkTime < 1) {
       onEvtLinkToLogin();
     } else{
       setTimeout(() => {
-        setLinkTime(linkTime - 1)
+        if (linkTime !== undefined)
+          setLinkTime(linkTime - 1)
       }, 1000)
     }
   }, [linkTime])
 
-  const onChangePassword = useCallback((e) => {
+  const onChangePassword = useCallback((e: any) => {
     setPassword(e.target.value);
     setMismatchError(e.target.value !== passwordCheck)
   }, [passwordCheck]);
 
-  const onChangePasswordCheck = useCallback((e) => {
+  const onChangePasswordCheck = useCallback((e: any) => {
     setPasswordCheck(e.target.value);
     setMismatchError(e.target.value !== password)
   }, [password]);
@@ -73,12 +74,12 @@ const Signup = () => {
         })
   }, [phoneNumber]);
 
-  const onChangeEmail = useCallback((e) => {
+  const onChangeEmail = useCallback((e: any) => {
     setEmail(e.target.value);
     setEmailCheck(false);
   }, []);
 
-  const onChangePhoneNumber = useCallback((e) => {
+  const onChangePhoneNumber = useCallback((e: any) => {
     setPhoneNumber(e.target.value);
     setPhoneNumberCheck(false);
   }, []);

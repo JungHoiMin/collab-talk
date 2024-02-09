@@ -1,17 +1,18 @@
+import React from "react";
 import "./Login.css"
 import imgLogo from '../../../images/logo.png'
 import {Button, TextField} from "@mui/material";
 import useInputState from "../../../hooks/InputState";
-import {axiosInstance, setAuthorizationToken} from "../../../apis/AxiosInstance";
+import {setAuthorizationToken} from "@apis/AxiosInstance";
 import {useNavigate} from "react-router-dom";
-import {login} from "../../../apis/auth/AuthApi";
-import {useDispatch} from "react-redux";
-import {setEmail, setName, setNickName, setToken} from "../../../stores/UserInfoSlice";
+import {login} from "@apis/auth/AuthApi";
+import {setEmail, setName, setNickName, setToken} from "@stores/UserInfoSlice";
+import {useAppDispatch} from "@hooks/hooks";
 const Login = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const [email, , onChangeEmail] = useInputState('');
-  const [password, , onChangePassword] = useInputState('');
+  const [email, , onChangeEmail] = useInputState<string>('');
+  const [password, , onChangePassword] = useInputState<string>('');
 
   const onClickLogin = () => {
     if (email === '') {
@@ -31,6 +32,7 @@ const Login = () => {
         dispatch(setEmail(email));
         dispatch(setName(name));
         setAuthorizationToken(token);
+        sessionStorage.setItem('token', token);
 
         if (nick_name === '')
           navigate('/home/init');

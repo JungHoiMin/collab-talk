@@ -1,3 +1,4 @@
+import React from "react";
 import './Init.css'
 import {
   Box,
@@ -10,33 +11,33 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import default_profile from "../../../images/default-profile.png"
+import default_profile from "@images/default-profile.png"
 import {useCallback, useState} from "react";
 import {useNavigate} from "react-router-dom";
-import useInputState from "../../../hooks/InputState";
+import useInputState from "@hooks/InputState";
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import {initProfile, initProfileImage} from "../../../apis/home/init/InitApi";
+import {initProfile, initProfileImage} from "@apis/home/init/InitApi";
 
 const steps = ['닉네임 만들기', '성별 선택하기', '프로필 사진 업로드 하기'];
 
 const Init = () => {
   const navigate = useNavigate();
-  const [activeStep, setActiveStep] = useState(0);
-  const [nickname, setNickname, onChangeNickname] = useInputState('');
-  const [gender, , onChangeGender] = useInputState('M');
-  const [imageSource, setImageSource] = useState(null);
-  const [previewImageSource, setPreviewImageSource] = useState(null)
+  const [activeStep, setActiveStep] = useState<number>(0);
+  const [nickname,, onChangeNickname] = useInputState<string>('');
+  const [gender, , onChangeGender] = useInputState<string>('M');
+  const [imageSource, setImageSource] = useState<File>();
+  const [previewImageSource, setPreviewImageSource] = useState<ArrayBuffer>()
 
-  const onClickImageUpload = useCallback((e) => {
+  const onClickImageUpload = useCallback((e: any) => {
     const selectedFile = e.target.files[0];
     setImageSource(selectedFile);
 
     const reader = new FileReader();
     reader.readAsDataURL(selectedFile);
 
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       reader.onload = () => {
-        setPreviewImageSource(reader.result || null);
+        setPreviewImageSource(reader.result as ArrayBuffer);
         resolve();
       }
     })
@@ -46,7 +47,7 @@ const Init = () => {
     setActiveStep((prev) => prev +1);
     if (activeStep >= steps.length - 1){
       if (imageSource !== null){
-        initProfileImage(imageSource)
+        initProfileImage(imageSource as File)
             .then((res) => {
               console.log(res);
             })
@@ -75,7 +76,7 @@ const Init = () => {
   const getStepContent = () => {
     if (activeStep === 0) {
       return (
-          <>
+          <React.Fragment>
             <div className="ctDescription">
               <Typography>당신이 메신저에서 사용할 닉네임을 만들어보세요.</Typography>
               <Typography>닉네임을 입력하지 않으면 당신의 이름으로 대체합니다.</Typography>
@@ -89,7 +90,7 @@ const Init = () => {
                   onChange={onChangeNickname}
               />
             </div>
-          </>
+          </React.Fragment>
       )
     } else if(activeStep === 1) {
       return (

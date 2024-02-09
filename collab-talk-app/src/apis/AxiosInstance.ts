@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const setAuthorizationToken = (token) => {
+export const setAuthorizationToken = (token: string) => {
   if (token) {
     axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   }else{
@@ -14,5 +14,5 @@ export const axiosInstance = axios.create({
     'Access-Control-Allow-Headers': 'Content-Type',
   },
   baseURL: 'http://localhost:8080/api/',
-  timeout: '1000',
+  timeout: 1000,
 })
