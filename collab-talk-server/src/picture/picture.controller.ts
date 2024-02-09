@@ -1,7 +1,9 @@
 import {
   Controller,
+  Get,
   Post,
   Req,
+  Res,
   ServiceUnavailableException,
   UploadedFile,
   UseGuards,
@@ -19,6 +21,22 @@ export class PictureController {
     private readonly pictureService: PictureService,
     private readonly collaboratorService: CollaboratorService,
   ) {}
+
+  @Get('/main')
+  @UseGuards(JwtAuthGuard)
+  async getMainImage(@Req() req, @Res() res) {
+    const uuid = req.user.uuid;
+    const imageFileName: string =
+      await this.collaboratorService.getImageMainName(uuid);
+
+    const imageFile = await this.pictureService.getImageFile(
+      uuid,
+      imageFileName,
+    );
+    res.contentType('image/png');
+    res.attachment();
+    res.send(imageFile);
+  }
 
   @Post('/upload')
   @UseGuards(JwtAuthGuard)

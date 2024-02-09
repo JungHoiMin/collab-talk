@@ -12,9 +12,7 @@ export class PictureService {
     private pictrueRepository: Repository<Picture>,
   ) {}
   moveImageTempToUser(uuid: string, imageFileName: string) {
-    console.log(uuid, imageFileName);
     const uploadUserFolderPath = uploadFolderPath + uuid + '/';
-    console.log(uploadUserFolderPath);
     if (!fs.existsSync(uploadUserFolderPath)) {
       fs.mkdirSync(uploadUserFolderPath, { recursive: true });
     }
@@ -47,6 +45,17 @@ export class PictureService {
     } catch (err) {
       console.log(err);
       return false;
+    }
+  }
+
+  async getImageFile(uuid: string, imageFileName: string) {
+    const uploadUserFolderPath = uploadFolderPath + uuid + '/';
+    const imageFileFullName = uploadUserFolderPath + imageFileName;
+
+    if (fs.existsSync(imageFileFullName)) {
+      return fs.readFileSync(imageFileFullName);
+    } else {
+      return null;
     }
   }
 }

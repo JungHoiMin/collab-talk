@@ -116,4 +116,17 @@ export class CollaboratorService {
       return err;
     }
   }
+
+  async getImageMainName(uuid: string) {
+    try {
+      const result = await this.collaboratorRepository
+        .createQueryBuilder()
+        .select('img_main_name')
+        .where('uuid = :uuid', { uuid })
+        .getRawOne();
+      return result.img_main_name;
+    } catch (err) {
+      return err;
+    }
+  }
 }
