@@ -1,11 +1,11 @@
 import React from "react";
 import './App.css';
-import {Navigate, Route, Routes} from "react-router-dom";
+import {Route, Routes} from "react-router-dom";
 import Signup from "@pages/auth/signup/Signup";
 import Login from "@pages/auth/login/Login";
 import Home from "@pages/home/Home";
 import Init from "@pages/home/init/Init";
-import AuthRoute from "./AuthRoute";
+import AuthRoute from "@layouts/AuthRoute";
 
 const App = () => {
   return (

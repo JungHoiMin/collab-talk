@@ -1,8 +1,8 @@
 import React from "react";
 import "./Login.css"
-import imgLogo from '../../../images/logo.png'
+import imgLogo from '@images/logo.png'
 import {Button, TextField} from "@mui/material";
-import useInputState from "../../../hooks/InputState";
+import useInputState from "@hooks/InputState";
 import {setAuthorizationToken} from "@apis/AxiosInstance";
 import {useNavigate} from "react-router-dom";
 import {login} from "@apis/auth/AuthApi";

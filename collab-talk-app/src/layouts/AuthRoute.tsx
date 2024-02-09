@@ -4,12 +4,7 @@ import {useAppSelector} from "@hooks/hooks";
 import {Outlet} from "react-router";
 
 const AuthRoute: React.FC = () => {
-  // const [isLogin, setIsLogin] = useState<boolean>(false);
   const token = useAppSelector((state) => state.userInfo.token) || sessionStorage.getItem('token') || '';
-  // useEffect(() => {
-  //   setIsLogin(token !== '')
-  //   console.log(isLogin)
-  // }, [token, isLogin]);
 
   if (token !== '') {
     return <Outlet/>;
