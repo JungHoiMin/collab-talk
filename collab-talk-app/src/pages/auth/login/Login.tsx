@@ -35,7 +35,7 @@ const Login = () => {
         sessionStorage.setItem('token', token);
 
         if (nick_name === '')
-          navigate('/home/init');
+          navigate('/init');
         else{
           dispatch(setNickName(nick_name));
           navigate('/home');

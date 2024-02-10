@@ -1,5 +1,11 @@
 import React from "react";
-import {CTTitleBar} from "@pages/home/HomeComponents";
+import {CTTitleBar} from "@components/CTTitleBar";
+import {CTRoomList} from "@components/CTRoomList";
+import {Box, CssBaseline, Drawer} from "@mui/material";
+import {Route, Routes} from "react-router-dom";
+import {CTDm} from "@pages/home/dm/CTDm";
+import {CTRoom} from "@pages/home/room/CTRoom";
+import {Outlet} from "react-router";
 
 
 const Home = () => {
@@ -7,7 +13,22 @@ const Home = () => {
   return (
     <>
       <div>
-        <CTTitleBar />
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <CTTitleBar />
+
+          <Box
+            component="nav"
+            sx={{ width: { sm: 70 }, flexShrink: { sm: 0 } }}
+          >
+            <CTRoomList />
+          </Box>
+          <Box
+            component="main"
+            sx={{ flexGrow: 1, pt: 10, pl: 2, width: { sm: `calc(100% - ${70}px)` } }}
+          >
+            <Outlet />
+          </Box>
         {/*<Drawer variant="permanent">*/}
         {/*  <List component="nav">*/}
         {/*    <ListItemButton>*/}
@@ -15,6 +36,7 @@ const Home = () => {
         {/*    </ListItemButton>*/}
         {/*  </List>*/}
         {/*</Drawer>*/}
+        </Box>
       </div>
     </>
   )

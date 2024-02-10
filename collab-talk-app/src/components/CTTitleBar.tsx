@@ -1,10 +1,11 @@
+import "@pages/home/Home.css"
 import {AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography} from "@mui/material";
 import logo from "@images/logo.png";
 import default_profile from "@images/default-profile.png";
 import React, {useCallback, useEffect, useState} from "react";
 import {useAppDispatch} from "@hooks/hooks";
 import {clearUserInfo} from "@stores/UserInfoSlice";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {loadProfileMainImageSource} from "@apis/home/HomeApi";
 import {setAuthorizationToken} from "@apis/AxiosInstance";
 
@@ -50,15 +51,23 @@ export const CTTitleBar = () => {
   }, [])
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="fixed"
+      sx={{
+        width: { sm: `calc(100% - ${70}px)` },
+        ml: { sm: `${70}px` },
+      }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <img width="200px" src={logo} alt="logo"/>
+          <Link to="/home" >
+            <img className="ctTitleLogo" src={logo} alt="logo" />
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="더보기...">
-              <IconButton onClick={onClickOpenUserMenu} sx={{ p: 0}} >
+              <IconButton onClick={onClickOpenUserMenu} sx={{ p: 0 }} >
                 <Avatar alt="Profile-Image" src={imageUrl || default_profile} />
               </IconButton>
             </Tooltip>
