@@ -2,11 +2,12 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignupDto, SignupResponseDto } from './dto/signup-collaborator.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Collaborator } from './entities/collaborator.entity';
-import { BeforeInsert, Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import { AuthService } from '../auth/auth.service';
 import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
 import { InitDto } from './dto/init-collaborator.dto';
 import * as bcrypt from 'bcrypt';
+import { CollaboratorsForListDto } from './dto/list-collaborator.dto';
 
 @Injectable()
 export class CollaboratorService {
@@ -117,14 +118,36 @@ export class CollaboratorService {
     }
   }
 
-  async getImageMainName(uuid: string) {
+  async getUUIDAndImageMainNameByEmail(email: string) {
     try {
-      const result = await this.collaboratorRepository
+      return await this.collaboratorRepository
         .createQueryBuilder()
-        .select('img_main_name')
-        .where('uuid = :uuid', { uuid })
+        .select(['uuid', 'img_main_name'])
+        .where('email = :email', { email })
         .getRawOne();
-      return result.img_main_name;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  async findCollaboratorsListByKeyword(
+    uuid: string,
+    keyword: string,
+  ): Promise<CollaboratorsForListDto[]> {
+    try {
+      keyword = `%${keyword}%`;
+      return await this.collaboratorRepository
+        .createQueryBuilder()
+        .select(['email', 'name', 'nick_name'])
+        .where('uuid <> :uuid', { uuid })
+        .andWhere(
+          new Brackets((sub) => {
+            sub
+              .where('name like :keyword', { keyword })
+              .orWhere('nick_name like :keyword', { keyword });
+          }),
+        )
+        .getRawMany();
     } catch (err) {
       return err;
     }

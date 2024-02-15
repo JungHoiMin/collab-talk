@@ -2,3 +2,21 @@
     width: 200px;
     cursor: pointer;
 }
+
+.ctDmNav {
+    background-color: #D0D5DA;
+}
+
+.ctChatMain {
+    padding-right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 90vh;
+}
+
+.ctFriendSearchBox {
+    margin-bottom: 16px;
+    width: 100%;
+}

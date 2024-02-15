@@ -32,7 +32,6 @@ const Login = () => {
         dispatch(setEmail(email));
         dispatch(setName(name));
         setAuthorizationToken(token);
-        sessionStorage.setItem('token', token);
 
         if (nick_name === '')
           navigate('/init');

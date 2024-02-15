@@ -3,10 +3,10 @@ import {AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Too
 import logo from "@images/logo.png";
 import default_profile from "@images/default-profile.png";
 import React, {useCallback, useEffect, useState} from "react";
-import {useAppDispatch} from "@hooks/hooks";
+import {useAppDispatch, useAppSelector} from "@hooks/hooks";
 import {clearUserInfo} from "@stores/UserInfoSlice";
 import {Link, useNavigate} from "react-router-dom";
-import {loadProfileMainImageSource} from "@apis/home/HomeApi";
+import {loadImageSourceByEmail} from "@apis/home/HomeApi";
 import {setAuthorizationToken} from "@apis/AxiosInstance";
 
 const settings = [
@@ -16,6 +16,7 @@ const settings = [
 ]
 
 export const CTTitleBar = () => {
+  const email = useAppSelector((state) => state.userInfo.email)
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -34,7 +35,6 @@ export const CTTitleBar = () => {
         break;
       case 'logout':
         dispatch(clearUserInfo());
-        sessionStorage.clear();
         setAuthorizationToken('');
         navigate('/auth/login')
         break;
@@ -42,7 +42,7 @@ export const CTTitleBar = () => {
   }, []);
 
   useEffect(() => {
-    loadProfileMainImageSource()
+    loadImageSourceByEmail(email || sessionStorage.getItem('email') || '')
       .then((res) => {
         setImageUrl(res)
       }).catch((err) => {

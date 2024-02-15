@@ -48,7 +48,7 @@ export class PictureService {
     }
   }
 
-  async getImageFile(uuid: string, imageFileName: string) {
+  getImageFile(uuid: string, imageFileName: string): Buffer {
     const uploadUserFolderPath = uploadFolderPath + uuid + '/';
     const imageFileFullName = uploadUserFolderPath + imageFileName;
 

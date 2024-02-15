@@ -13,9 +13,11 @@ export const userInfoSlice = createSlice({
   initialState,
   reducers: {
     setToken: (state, action) => {
+      sessionStorage.setItem('token', action.payload)
       state.token = action.payload
     },
     setEmail: (state, action) => {
+      sessionStorage.setItem('email', action.payload)
       state.email = action.payload
     },
     setName: (state, action) => {
@@ -25,6 +27,8 @@ export const userInfoSlice = createSlice({
       state.nickName = action.payload
     },
     clearUserInfo: (state) => {
+      sessionStorage.removeItem('token')
+      sessionStorage.removeItem('email')
       state.token = '';
       state.email = '';
       state.name = '';

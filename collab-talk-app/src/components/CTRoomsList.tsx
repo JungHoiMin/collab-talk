@@ -4,7 +4,7 @@ import {deepOrange} from "@mui/material/colors";
 import {useNavigate} from "react-router-dom";
 
 const rooms = ['room1', 'room2', 'room3', 'room4', 'room5'];
-export const CTRoomList = () => {
+export const CTRoomsList = () => {
   const navigate = useNavigate();
 
   const stringToColor = (string: string) => {

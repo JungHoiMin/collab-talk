@@ -23,6 +23,7 @@ import { Picture } from './picture/entities/picture.entity';
       database: process.env.DB_NAME,
       entities: [Collaborator, Picture],
       synchronize: true,
+      logging: true,
     }),
     CollaboratorModule,
     AuthModule,

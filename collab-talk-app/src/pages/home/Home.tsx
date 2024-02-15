@@ -1,6 +1,6 @@
 import React from "react";
 import {CTTitleBar} from "@components/CTTitleBar";
-import {CTRoomList} from "@components/CTRoomList";
+import {CTRoomsList} from "@components/CTRoomsList";
 import {Box, CssBaseline, Drawer} from "@mui/material";
 import {Route, Routes} from "react-router-dom";
 import {CTDm} from "@pages/home/dm/CTDm";
@@ -21,7 +21,7 @@ const Home = () => {
             component="nav"
             sx={{ width: { sm: 70 }, flexShrink: { sm: 0 } }}
           >
-            <CTRoomList />
+            <CTRoomsList />
           </Box>
           <Box
             component="main"

@@ -1,6 +1,9 @@
 import {
   Controller,
+  forwardRef,
   Get,
+  Inject,
+  Param,
   Post,
   Req,
   Res,
@@ -19,20 +22,18 @@ import { CollaboratorService } from '../collaborator/collaborator.service';
 export class PictureController {
   constructor(
     private readonly pictureService: PictureService,
+
+    @Inject(forwardRef(() => CollaboratorService))
     private readonly collaboratorService: CollaboratorService,
   ) {}
 
-  @Get('/main')
+  @Get('/main/:email')
   @UseGuards(JwtAuthGuard)
-  async getMainImage(@Req() req, @Res() res) {
-    const uuid = req.user.uuid;
-    const imageFileName: string =
-      await this.collaboratorService.getImageMainName(uuid);
+  async getMainImage(@Res() res, @Param('email') email: string) {
+    const { uuid, img_main_name } =
+      await this.collaboratorService.getUUIDAndImageMainNameByEmail(email);
 
-    const imageFile = await this.pictureService.getImageFile(
-      uuid,
-      imageFileName,
-    );
+    const imageFile = this.pictureService.getImageFile(uuid, img_main_name);
     res.contentType('image/png');
     res.attachment();
     res.send(imageFile);

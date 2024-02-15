@@ -8,11 +8,12 @@ import { CollaboratorModule } from '../collaborator/collaborator.module';
 
 @Module({
   imports: [
-    CollaboratorModule,
+    forwardRef(() => CollaboratorModule),
     TypeOrmModule.forFeature([Picture]),
     forwardRef(() => AuthModule),
   ],
   controllers: [PictureController],
   providers: [PictureService],
+  exports: [PictureService],
 })
 export class PictureModule {}

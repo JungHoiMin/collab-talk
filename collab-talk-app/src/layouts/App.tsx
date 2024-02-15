@@ -8,6 +8,8 @@ import Init from "@pages/home/init/Init";
 import AuthRoute from "@layouts/AuthRoute";
 import {CTDm} from "@pages/home/dm/CTDm";
 import {CTRoom} from "@pages/home/room/CTRoom";
+import {CTAddFriend} from "@pages/home/dm/CTAddFriend";
+import {CTChat} from "@pages/home/dm/CTChat";
 
 const App = () => {
   return (
@@ -20,7 +22,10 @@ const App = () => {
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="init" element={<Init />} />
           <Route path="home" element={<Home />} >
-            <Route path="dm" element={<CTDm />}/>
+            <Route path="dm" element={<CTDm />} >
+              <Route path="addFrend" element={<CTAddFriend/>}/>
+              <Route path=":email" element={<CTChat/>}/>
+            </Route>
             <Route path="room/:roomId" element={<CTRoom />} />
           </Route>
         </Route>
