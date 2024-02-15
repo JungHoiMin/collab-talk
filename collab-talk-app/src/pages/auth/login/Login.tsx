@@ -1,4 +1,4 @@
-import React from "react";
+import React, {KeyboardEvent, useCallback} from "react";
 import "./Login.css"
 import imgLogo from '@images/logo.png'
 import {Button, TextField} from "@mui/material";
@@ -14,7 +14,7 @@ const Login = () => {
   const [email, , onChangeEmail] = useInputState<string>('');
   const [password, , onChangePassword] = useInputState<string>('');
 
-  const onClickLogin = () => {
+  const onClickLogin = useCallback(() => {
     if (email === '') {
       alert('이메일을 입력하세요.');
       return;
@@ -43,16 +43,22 @@ const Login = () => {
         .catch((err) => {
           console.log(err)
         })
-  }
+  }, [email, password]);
+
+  const onKeyDownSearchInput = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter')
+      onClickLogin()
+  };
+
   return (
     <>
       <div className="ctLoginMain">
         <img className="ctLogo" src={imgLogo} alt="logo"/>
         <div>
-          <TextField className="ctInput" variant="standard" label="이메일" type="email" onChange={onChangeEmail}/>
+          <TextField className="ctInput" variant="standard" label="이메일" type="email" onChange={onChangeEmail} onKeyDown={onKeyDownSearchInput}/>
         </div>
         <div>
-          <TextField className="ctInput" variant="standard" label="비밀번호" type="password" onChange={onChangePassword}/>
+          <TextField className="ctInput" variant="standard" label="비밀번호" type="password" onChange={onChangePassword} onKeyDown={onKeyDownSearchInput}/>
         </div>
         <div>
           <Button className="ctSubmitButton" variant="outlined" onClick={onClickLogin}>로그인</Button>
