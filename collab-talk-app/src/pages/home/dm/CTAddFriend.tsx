@@ -14,7 +14,7 @@ import {
   TableRow, TextField
 } from "@mui/material";
 import {axiosInstance} from "@apis/AxiosInstance";
-import {loadImageSourceByEmail, searchFriends, TSearchDataForTable} from "@apis/home/HomeApi";
+import {loadImageSourceByEmail, searchFriends, sendAddFriendByEmail, TSearchDataForTable} from "@apis/home/HomeApi";
 import useInputState from "@hooks/InputState";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -97,7 +97,7 @@ export const CTAddFriend = () => {
                     <StyledTableCell component="th" scope="row" width="40"><Avatar src={row.img_main_url}/></StyledTableCell>
                     <StyledTableCell>{row.name}</StyledTableCell>
                     <StyledTableCell>{row.nick_name}</StyledTableCell>
-                    <StyledTableCell align="right"><Button variant="contained">친구요청</Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button variant="contained" onClick={() => {sendAddFriendByEmail(row.email)}}>친구요청</Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
             </TableBody>

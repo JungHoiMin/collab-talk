@@ -31,7 +31,10 @@ export class PictureController {
   @UseGuards(JwtAuthGuard)
   async getMainImage(@Res() res, @Param('email') email: string) {
     const { uuid, img_main_name } =
-      await this.collaboratorService.getUUIDAndImageMainNameByEmail(email);
+      await this.collaboratorService.getRawOneByEmail(
+        ['uuid', 'img_main_name'],
+        email,
+      );
 
     const imageFile = this.pictureService.getImageFile(uuid, img_main_name);
     res.contentType('image/png');

@@ -15,7 +15,7 @@ import { LoginDto, LoginResponseDto } from './dto/login-collaborator.dto';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { InitDto } from './dto/init-collaborator.dto';
 import { PictureService } from '../picture/picture.service';
-import {CollaboratorsForListDto} from "./dto/list-collaborator.dto";
+import { CollaboratorsForListDto } from './dto/list-collaborator.dto';
 
 @Controller('collaborator')
 export class CollaboratorController {

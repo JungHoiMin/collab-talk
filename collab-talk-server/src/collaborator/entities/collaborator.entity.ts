@@ -1,11 +1,9 @@
 import {
-  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
 
 @Entity('tbl_collaborator')
 export class Collaborator {

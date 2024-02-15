@@ -118,11 +118,11 @@ export class CollaboratorService {
     }
   }
 
-  async getUUIDAndImageMainNameByEmail(email: string) {
+  async getRawOneByEmail(selection: string[], email: string) {
     try {
       return await this.collaboratorRepository
         .createQueryBuilder()
-        .select(['uuid', 'img_main_name'])
+        .select(selection)
         .where('email = :email', { email })
         .getRawOne();
     } catch (err) {

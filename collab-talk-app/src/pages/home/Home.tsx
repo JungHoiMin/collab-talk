@@ -1,15 +1,15 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {CTTitleBar} from "@components/CTTitleBar";
 import {CTRoomsList} from "@components/CTRoomsList";
 import {Box, CssBaseline, Drawer} from "@mui/material";
-import {Route, Routes} from "react-router-dom";
-import {CTDm} from "@pages/home/dm/CTDm";
-import {CTRoom} from "@pages/home/room/CTRoom";
 import {Outlet} from "react-router";
-
+import {getBadgeConnection} from "@apis/home/HomeApi";
 
 const Home = () => {
-
+  let badgeConnection;
+  useEffect(() => {
+    badgeConnection = getBadgeConnection();
+  }, [])
   return (
     <>
       <div>
@@ -29,13 +29,6 @@ const Home = () => {
           >
             <Outlet />
           </Box>
-        {/*<Drawer variant="permanent">*/}
-        {/*  <List component="nav">*/}
-        {/*    <ListItemButton>*/}
-        {/*      <ListItemText primary="Daa"/>*/}
-        {/*    </ListItemButton>*/}
-        {/*  </List>*/}
-        {/*</Drawer>*/}
         </Box>
       </div>
     </>
