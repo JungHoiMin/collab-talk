@@ -1,7 +1,7 @@
 import { Subject } from 'rxjs';
-import { ConnectInfoDto } from './dto/connect-info.dto';
+import { SseBadgeDto } from './dto/sse-badge.dto';
 
-export const userSubjectSession: Subject<ConnectInfoDto> =
-  new Subject<ConnectInfoDto>();
+export const badgeSubjectSession: Subject<SseBadgeDto> =
+  new Subject<SseBadgeDto>();
 
-export const observer = userSubjectSession.asObservable();
+export const badgeObserver = badgeSubjectSession.asObservable();

@@ -2,7 +2,9 @@ import {
   Body,
   Controller,
   forwardRef,
+  Get,
   Inject,
+  Param,
   Post,
   Req,
   UseGuards,
@@ -25,20 +27,39 @@ export class FriendsController {
     private readonly collaboratorService: CollaboratorService,
   ) {}
 
+  @Get('/status/:email')
+  @UseGuards(JwtAuthGuard)
+  async getFriendStatusByEmail(@Req() req: any, @Param('email') email: string) {
+    const getUUIDResponse = await this.collaboratorService.getRawOneByEmail(
+      ['uuid'],
+      email,
+    );
+    const UUID1 = req.user.uuid;
+    const UUID2 = getUUIDResponse.uuid;
+
+    return await this.friendsService.getFriendStatus(UUID1, UUID2);
+  }
+
   @Post('/add')
   @UseGuards(JwtAuthGuard)
   async requestFriend(@Req() req: any, @Body() data: { email: string }) {
     try {
       const requestUUID = req.user.uuid;
+      const requestor = await this.collaboratorService.getRawOneByEmail(
+        ['email', 'name', 'nick_name'],
+        req.user.email,
+      );
       const getUUIDResponse = await this.collaboratorService.getRawOneByEmail(
         ['uuid'],
         data.email,
       );
       const responseUUID = getUUIDResponse.uuid;
 
-      await this.customSseSService.sendSSE(responseUUID);
-      // const data: RequestFriendDto = { requestUUID, responseUUID };
-      // return await this.friendsService.requestFriend(data);
+      await this.customSseSService.sendSSE(responseUUID, 'request-friend', {
+        requestor,
+      });
+      const requestFriendDto: RequestFriendDto = { requestUUID, responseUUID };
+      return await this.friendsService.requestFriend(requestFriendDto);
     } catch (err) {
       return err;
     }

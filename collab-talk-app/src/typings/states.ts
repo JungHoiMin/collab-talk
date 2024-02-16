@@ -4,3 +4,14 @@ export type TUserInfoState = {
   name: string,
   nickName: string,
 }
+
+export type TAlarmState = {
+  badge: number,
+  requestFriend: number,
+}
+
+export type TFriendStatus =
+  | 'not_connected'
+  | 'request'
+  | 'reject'
+  | 'becomeFriend';

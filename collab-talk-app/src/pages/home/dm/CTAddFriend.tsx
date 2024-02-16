@@ -13,8 +13,7 @@ import {
   TableHead, TablePagination,
   TableRow, TextField
 } from "@mui/material";
-import {axiosInstance} from "@apis/AxiosInstance";
-import {loadImageSourceByEmail, searchFriends, sendAddFriendByEmail, TSearchDataForTable} from "@apis/home/HomeApi";
+import {searchFriends, sendAddFriendByEmail, TSearchDataForTable} from "@apis/home/HomeApi";
 import useInputState from "@hooks/InputState";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -31,10 +30,6 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '&:nth-of-type(odd)': {
     backgroundColor: theme.palette.action.hover,
   },
-  // hide last border
-  // '&:last-child td, &:last-child th': {
-  //   border: 0,
-  // },
 }));
 
 export const CTAddFriend = () => {
@@ -65,6 +60,20 @@ export const CTAddFriend = () => {
     })
   }, [searchKeyword]);
 
+  const onClickRequestFriend = useCallback((row: number, email: string) => {
+    sendAddFriendByEmail(email)
+      .then((rs) => {
+        if (rs) {
+          setSearchData((prev) => prev.map((value, index) => {
+            if (row === index) {
+              value.status = 'request'
+            }
+            return value;
+          }))
+        }
+      })
+  }, [])
+
   return (
     <>
       <div className="ctChatMain">
@@ -92,12 +101,12 @@ export const CTAddFriend = () => {
             <TableBody>
               {searchData
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row: TSearchDataForTable) => (
+                .map((row: TSearchDataForTable, idx: number) => (
                   <StyledTableRow key={row.email}>
                     <StyledTableCell component="th" scope="row" width="40"><Avatar src={row.img_main_url}/></StyledTableCell>
                     <StyledTableCell>{row.name}</StyledTableCell>
                     <StyledTableCell>{row.nick_name}</StyledTableCell>
-                    <StyledTableCell align="right"><Button variant="contained" onClick={() => {sendAddFriendByEmail(row.email)}}>친구요청</Button></StyledTableCell>
+                    <StyledTableCell align="right"><Button variant="contained" disabled={row.status !== 'not_connected'} onClick={() => {onClickRequestFriend(idx, row.email)}}>친구요청</Button></StyledTableCell>
                   </StyledTableRow>
                 ))}
             </TableBody>

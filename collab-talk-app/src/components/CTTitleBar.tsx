@@ -1,5 +1,17 @@
 import "@pages/home/Home.css"
-import {AppBar, Avatar, Box, Container, IconButton, Menu, MenuItem, Toolbar, Tooltip, Typography} from "@mui/material";
+import {
+  AppBar,
+  Avatar,
+  Badge,
+  Box,
+  Container,
+  IconButton,
+  Menu,
+  MenuItem,
+  Toolbar,
+  Tooltip,
+  Typography
+} from "@mui/material";
 import logo from "@images/logo.png";
 import default_profile from "@images/default-profile.png";
 import React, {useCallback, useEffect, useState} from "react";
@@ -8,6 +20,8 @@ import {clearUserInfo} from "@stores/UserInfoSlice";
 import {Link, useNavigate} from "react-router-dom";
 import {loadImageSourceByEmail} from "@apis/home/HomeApi";
 import {setAuthorizationToken} from "@apis/AxiosInstance";
+import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
 
 const settings = [
   { label: 'profile', value: '프로필' },
@@ -16,7 +30,8 @@ const settings = [
 ]
 
 export const CTTitleBar = () => {
-  const email = useAppSelector((state) => state.userInfo.email)
+  const email = useAppSelector((state) => state.userInfo.email);
+  const badge = useAppSelector((state) => state.alarm.badge);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -64,6 +79,13 @@ export const CTTitleBar = () => {
             <img className="ctTitleLogo" src={logo} alt="logo" />
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
+          </Box>
+          <Box sx={{ flexGrow: 0 }}>
+            <IconButton aria-label="alarm">
+              <Badge badgeContent={badge} color="secondary">
+                {badge===0?<NotificationsNoneIcon/>:<NotificationsActiveIcon/>}
+              </Badge>
+            </IconButton>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="더보기...">

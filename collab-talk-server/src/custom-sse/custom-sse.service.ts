@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ConnectManager } from './entities/connect-manager.entity';
 import { Repository } from 'typeorm';
-import { userSubjectSession } from './custom-sse.manager';
+import { badgeSubjectSession } from './custom-sse.manager';
 
 @Injectable()
 export class CustomSseService {
@@ -50,7 +50,7 @@ export class CustomSseService {
     }
   }
 
-  async sendSSE(uuid: string) {
+  async sendSSE(uuid: string, evt: string, body: any) {
     const info = await this.connectManagerRepository
       .createQueryBuilder()
       .select(['badge'])
@@ -64,9 +64,11 @@ export class CustomSseService {
         .set({ badge: info.badge + 1 })
         .where('uuid = :uuid', { uuid })
         .execute();
-      userSubjectSession.next({
+      badgeSubjectSession.next({
+        evt,
         uuid,
         badge: info.badge + 1,
+        body,
       });
     }
   }
