@@ -4,10 +4,11 @@ import imgLogo from '@images/logo.png'
 import {Button, TextField} from "@mui/material";
 import useInputState from "@hooks/InputState";
 import {setAuthorizationToken} from "@apis/AxiosInstance";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {login} from "@apis/auth/AuthApi";
 import {setEmail, setName, setNickName, setToken} from "@stores/UserInfoSlice";
 import {useAppDispatch} from "@hooks/hooks";
+import {onKeyDownSearchInput} from "@apis/CommonsApi";
 const Login = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -45,23 +46,23 @@ const Login = () => {
         })
   }, [email, password]);
 
-  const onKeyDownSearchInput = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter')
-      onClickLogin()
-  };
+
 
   return (
     <>
       <div className="ctLoginMain">
         <img className="ctLogo" src={imgLogo} alt="logo"/>
         <div>
-          <TextField className="ctInput" variant="standard" label="이메일" type="email" onChange={onChangeEmail} onKeyDown={onKeyDownSearchInput}/>
+          <TextField className="ctInput" variant="standard" label="이메일" type="email" onChange={onChangeEmail} onKeyDown={(e) => {onKeyDownSearchInput(e, onClickLogin)}}/>
         </div>
         <div>
-          <TextField className="ctInput" variant="standard" label="비밀번호" type="password" onChange={onChangePassword} onKeyDown={onKeyDownSearchInput}/>
+          <TextField className="ctInput" variant="standard" label="비밀번호" type="password" onChange={onChangePassword} onKeyDown={(e) => {onKeyDownSearchInput(e, onClickLogin)}}/>
         </div>
         <div>
           <Button className="ctSubmitButton" variant="outlined" onClick={onClickLogin}>로그인</Button>
+        </div>
+        <div>
+          <Link to="/auth/signup">회원가입 하러가기</Link>
         </div>
       </div>
     </>

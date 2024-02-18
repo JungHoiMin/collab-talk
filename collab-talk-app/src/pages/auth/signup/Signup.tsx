@@ -4,8 +4,9 @@ import imgLogo from "@images/logo.png"
 import useInputState from "@hooks/InputState";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, TextField} from "@mui/material";
 import {useCallback, useEffect, useState} from "react";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 import {checkEmailDuplication, checkPhoneNumberDuplication, signup} from "@apis/auth/AuthApi";
+import {onKeyDownSearchInput} from "@apis/CommonsApi";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -119,13 +120,13 @@ const Signup = () => {
       <div className="ctSignupMain">
         <img className="ctLogo" src={imgLogo} alt="logo"/>
         <div>
-          <TextField className="ctInput" variant="standard" label="이메일" type="email" onChange={onChangeEmail}/>
+          <TextField className="ctInput" variant="standard" label="이메일" type="email" onChange={onChangeEmail} onKeyDown={(e) => {onKeyDownSearchInput(e, onClickSignup)}}/>
           <Button className="ctCheckButton" variant="contained" color="secondary"
                   disabled={emailCheck} onClick={onClickCheckEmailDuplicate}
           >중복 확인</Button>
         </div>
         <div>
-          <TextField className="ctInput" variant="standard" label="비밀번호" type="password" onChange={onChangePassword}/>
+          <TextField className="ctInput" variant="standard" label="비밀번호" type="password" onChange={onChangePassword} onKeyDown={(e) => {onKeyDownSearchInput(e, onClickSignup)}}/>
         </div>
         <div>
           <TextField className="ctInput" variant="standard" label="비밀번호 확인" type="password"
@@ -135,16 +136,19 @@ const Signup = () => {
           {mismatchError && <p className="ctWarningText">비밀번호가 일치하지 않습니다.</p>}
         </div>
         <div>
-          <TextField className="ctInput" variant="standard" label="이름" type="text" onChange={onChangeName}/>
+          <TextField className="ctInput" variant="standard" label="이름" type="text" onChange={onChangeName} onKeyDown={(e) => {onKeyDownSearchInput(e, onClickSignup)}}/>
         </div>
         <div>
-          <TextField className="ctInput" variant="standard" label="전화번호" type="text" onChange={onChangePhoneNumber}/>
+          <TextField className="ctInput" variant="standard" label="전화번호" type="text" onChange={onChangePhoneNumber} onKeyDown={(e) => {onKeyDownSearchInput(e, onClickSignup)}}/>
           <Button className="ctCheckButton" variant="contained" color="secondary"
                   disabled={phoneNumberCheck} onClick={onClickCheckPhoneNumberDuplicate}
           >중복 확인</Button>
         </div>
         <div>
           <Button className="ctSubmitButton" variant="outlined" onClick={onClickSignup}>회원가입</Button>
+        </div>
+        <div>
+          <Link to="/auth/login">로그인 하러가기</Link>
         </div>
       </div>
       <Dialog open={successSignup}
