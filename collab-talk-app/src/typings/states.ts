@@ -1,3 +1,14 @@
+export type TAlarmType = 'server' | 'friend';
+
+export type TYesNo = 'Y' | 'N';
+
+export type TAlarm = {
+  alarm_type: TAlarmType,
+  title: string,
+  detail: string,
+  is_check: TYesNo,
+}
+
 export type TUserInfoState = {
   token: string,
   email: string,
@@ -7,6 +18,7 @@ export type TUserInfoState = {
 
 export type TAlarmState = {
   badge: number,
+  alarmList: TAlarm[],
   requestFriend: number,
 }
 

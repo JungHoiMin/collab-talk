@@ -55,8 +55,15 @@ export class FriendsController {
       );
       const responseUUID = getUUIDResponse.uuid;
 
+      console.log('요청을해');
       await this.customSseSService.sendSSE(responseUUID, 'request-friend', {
         requestor,
+        alarm: {
+          alarm_type: 'friend',
+          title: '친구요청',
+          detail: `${requestor.nick_name}님이 친구 요청을 했습니다.`,
+          is_check: 'N',
+        },
       });
       const requestFriendDto: RequestFriendDto = { requestUUID, responseUUID };
       return await this.friendsService.requestFriend(requestFriendDto);

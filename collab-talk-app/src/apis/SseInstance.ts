@@ -1,6 +1,6 @@
 import {EventSourcePolyfill} from "event-source-polyfill";
 import {store} from "@stores/Store";
-import {increaseBadge, increaseRequestFriend} from "@stores/AlarmSlice";
+import {increaseBadge, increaseRequestFriend, pushAlarmList} from "@stores/AlarmSlice";
 
 export const getSseConnection = (target: string) => {
   const token = store.getState().userInfo.token || ''
@@ -21,8 +21,10 @@ export const getSseConnection = (target: string) => {
 
     store.dispatch(increaseBadge());
     if (data.evt === 'request-friend') {
-      const requestor = data.requestor;
-      store.dispatch(increaseRequestFriend())
+      const requestor = data.body.requestor;
+      const alarm = data.body.alarm;
+      store.dispatch(pushAlarmList(alarm));
+      store.dispatch(increaseRequestFriend());
     }
   };
 

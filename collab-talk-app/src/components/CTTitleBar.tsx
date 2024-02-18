@@ -22,6 +22,10 @@ import {loadImageSourceByEmail} from "@apis/home/HomeApi";
 import {setAuthorizationToken} from "@apis/AxiosInstance";
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive';
+import useToggleState from "@hooks/ToggleState";
+import {CTAlarmDialog} from "@components/CTAlarmDialog";
+import {clearAlarm, setBadge} from "@stores/AlarmSlice";
+import {store} from "@stores/Store";
 
 const settings = [
   { label: 'profile', value: '프로필' },
@@ -37,6 +41,18 @@ export const CTTitleBar = () => {
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const [imageUrl, setImageUrl] = useState<null | string>(null);
+  const [alarmDialogToggle, , onClickAlarmDialogToggle] = useToggleState(false)
+
+  useEffect(() => {
+    if (store.getState().alarm.badge === 0){
+      const sessionBadge = +(sessionStorage.getItem('badge') || 0)
+
+      if (sessionBadge > 0) {
+        store.dispatch(setBadge(sessionBadge))
+      }
+    }
+  }, []);
+
   const onClickOpenUserMenu = useCallback((e: any) => {
     setAnchorElUser(e.currentTarget);
   }, [])
@@ -50,6 +66,7 @@ export const CTTitleBar = () => {
         break;
       case 'logout':
         dispatch(clearUserInfo());
+        dispatch(clearAlarm())
         setAuthorizationToken('');
         navigate('/auth/login')
         break;
@@ -81,7 +98,7 @@ export const CTTitleBar = () => {
           <Box sx={{ flexGrow: 1, display: { xs: 'flex' } }}>
           </Box>
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton aria-label="alarm">
+            <IconButton aria-label="alarm" onClick={onClickAlarmDialogToggle}>
               <Badge badgeContent={badge} color="secondary">
                 {badge===0?<NotificationsNoneIcon/>:<NotificationsActiveIcon/>}
               </Badge>
@@ -117,6 +134,7 @@ export const CTTitleBar = () => {
           </Box>
         </Toolbar>
       </Container>
+      <CTAlarmDialog toggle={alarmDialogToggle} onClickToggle={onClickAlarmDialogToggle}/>
     </AppBar>
   )
 }

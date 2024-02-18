@@ -3,12 +3,16 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { ConnectManager } from './entities/connect-manager.entity';
 import { Repository } from 'typeorm';
 import { badgeSubjectSession } from './custom-sse.manager';
+import { Alarm } from './entities/alarm.entity';
 
 @Injectable()
 export class CustomSseService {
   constructor(
     @InjectRepository(ConnectManager)
     private readonly connectManagerRepository: Repository<ConnectManager>,
+
+    @InjectRepository(Alarm)
+    private readonly alarmRepository: Repository<Alarm>,
   ) {}
 
   async addStream(uuid: string) {
@@ -64,6 +68,14 @@ export class CustomSseService {
         .set({ badge: info.badge + 1 })
         .where('uuid = :uuid', { uuid })
         .execute();
+
+      await this.alarmRepository
+        .createQueryBuilder()
+        .insert()
+        .into(Alarm)
+        .values({ uuid, ...body.alarm })
+        .execute();
+
       badgeSubjectSession.next({
         evt,
         uuid,
@@ -71,5 +83,14 @@ export class CustomSseService {
         body,
       });
     }
+  }
+
+  async getBadgeByUUID(uuid: string) {
+    const data = await this.connectManagerRepository
+      .createQueryBuilder()
+      .select(['badge'])
+      .where('uuid = :uuid', { uuid })
+      .getRawOne();
+    return data.badge;
   }
 }

@@ -12,6 +12,7 @@ import { FriendsModule } from './friends/friends.module';
 import { Friends } from './friends/entities/friends.entity';
 import { CustomSseModule } from './custom-sse/custom-sse.module';
 import { ConnectManager } from './custom-sse/entities/connect-manager.entity';
+import { Alarm } from './custom-sse/entities/alarm.entity';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { ConnectManager } from './custom-sse/entities/connect-manager.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [Collaborator, Picture, Friends, ConnectManager],
+      entities: [Collaborator, Picture, Friends, ConnectManager, Alarm],
       synchronize: true,
       logging: true,
     }),

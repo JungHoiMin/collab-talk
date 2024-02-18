@@ -5,7 +5,7 @@ import {Button, TextField} from "@mui/material";
 import useInputState from "@hooks/InputState";
 import {setAuthorizationToken} from "@apis/AxiosInstance";
 import {Link, useNavigate} from "react-router-dom";
-import {login} from "@apis/auth/AuthApi";
+import {getAlarmList, login} from "@apis/auth/AuthApi";
 import {setEmail, setName, setNickName, setToken} from "@stores/UserInfoSlice";
 import {useAppDispatch} from "@hooks/hooks";
 import {onKeyDownSearchInput} from "@apis/CommonsApi";
@@ -33,6 +33,7 @@ const Login = () => {
         dispatch(setEmail(email));
         dispatch(setName(name));
         setAuthorizationToken(token);
+        getAlarmList();
 
         if (nick_name === '')
           navigate('/init');

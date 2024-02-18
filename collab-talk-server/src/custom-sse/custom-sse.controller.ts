@@ -1,4 +1,4 @@
-import { Controller, Req, Sse, UseGuards } from '@nestjs/common';
+import { Controller, Get, Req, Sse, UseGuards } from '@nestjs/common';
 import { CustomSseService } from './custom-sse.service';
 import { JwtAuthGuard } from '../auth/jwt/jwt.guard';
 import { badgeObserver } from './custom-sse.manager';
@@ -7,6 +7,12 @@ import { filter, map } from 'rxjs';
 @Controller('custom-sse')
 export class CustomSseController {
   constructor(private readonly customSseService: CustomSseService) {}
+
+  @Get()
+  @UseGuards(JwtAuthGuard)
+  async getMyBadge(@Req() req: any) {
+    return await this.customSseService.getBadgeByUUID(req.user.uuid);
+  }
 
   @Sse('badge')
   @UseGuards(JwtAuthGuard)
