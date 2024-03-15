@@ -1,0 +1,38 @@
+[
+  {
+    "id": "1bf3d693-2973-48ca-a127-7046c0fbd80a",
+    "user": {
+      "id": "dlgksruf",
+      "name": "이한결",
+      "imgSource": "temp/dlgksruf.png"
+    },
+    "badge": 3
+  },
+  {
+    "id": "68a29fd6-6ec7-466d-b448-f66716686423",
+    "user": {
+      "id": "whtjddms",
+      "name": "조성은",
+      "imgSource": "temp/whtjddms.png"
+    },
+    "badge": 0
+  },
+  {
+    "id": "ef3503fa-ed64-4fba-b293-60c8b49a23a2",
+    "user": {
+      "id": "rlaqjawns",
+      "name": "김범준",
+      "imgSource": "temp/rlaqjawns.png"
+    },
+    "badge": 1
+  },
+  {
+    "id": "fb4787e1-455c-4136-b23c-53c09677e0b5",
+    "user": {
+      "id": "rlawnsdus",
+      "name": "김준연",
+      "imgSource": "temp/rlawnsdus.png"
+    },
+    "badge": 0
+  }
+]

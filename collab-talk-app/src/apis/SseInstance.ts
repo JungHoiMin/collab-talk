@@ -5,7 +5,7 @@ import {increaseBadge, increaseRequestFriend, pushAlarmList} from "@stores/Alarm
 export const getSseConnection = (target: string) => {
   const token = store.getState().userInfo.token || ''
 
-  const sseConnection = new EventSourcePolyfill(`http://localhost:8080/api/custom-sse/${target}`, {
+  const sseConnection = new EventSourcePolyfill(`http://19.19.20.49:8080/api/custom-sse/${target}`, {
     headers: {
       Authorization: `Bearer ${token}`
     },

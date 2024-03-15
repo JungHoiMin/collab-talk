@@ -13,6 +13,6 @@ export const axiosInstance = axios.create({
     'Access-Control-Allow-Origin': '*',
     'Access-Control-Allow-Headers': 'Content-Type',
   },
-  baseURL: 'http://localhost:8080/api/',
+  baseURL: 'http://19.19.20.49:8080/api/',
   timeout: 1000,
 })
