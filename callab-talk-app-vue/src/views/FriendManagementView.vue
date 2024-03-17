@@ -1,30 +1,63 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, onBeforeMount, ref } from "vue";
 import CollabTable from "@/components/collabTable/CollabTable.vue";
 import {
   CallabTableData,
   CollabTableHeader,
 } from "@/components/collabTable/types";
+import {
+  getFriendListByNickName,
+  IFriend,
+} from "@/apis/friendManagementView/friendManagementViewApi";
 
-const keyword = ref("");
-const header: CollabTableHeader[] = [];
-const friendList = ref<CallabTableData[]>([]);
+const searchKeyword = ref("");
+const tableHeader: CollabTableHeader[] = [];
+const tableData = ref<CallabTableData[]>([]);
+const friendList = ref<IFriend[]>([]);
+
+const getTableDataByKeyword = () => {
+  const keyword = searchKeyword.value;
+  const dataList = keyword
+    ? friendList.value.filter(
+        (data) => data.name === keyword || data.nickName === keyword
+      )
+    : friendList.value;
+  tableData.value = dataList.map((data) => {
+    return [
+      { key: "nickName", label: data.nickName },
+      { key: "imgSource", label: data.imgSource },
+    ];
+  });
+};
+
+onBeforeMount(() => {
+  getFriendListByNickName().then((data) => {
+    friendList.value = data;
+    getTableDataByKeyword();
+  });
+});
 </script>
 
 <template>
   <div class="friend-management">
     <el-input
       class="search-input"
-      v-model="keyword"
-      placeholder="Please input"
+      v-model="searchKeyword"
+      @focusout="getTableDataByKeyword()"
+      @keydown.enter="getTableDataByKeyword()"
+      size="large"
+      placeholder="검색하기"
     />
-    <CollabTable show-header :header="header" :data="friendList">
-      <template #description> 모든 친구 - {{ friendList.length }}명 </template>
+    <CollabTable
+      class="friend-table"
+      show-header
+      :header="tableHeader"
+      :data="tableData"
+    >
+      <template #description>
+        <div>온라인 - {{ tableData.length }}명</div>
+      </template>
     </CollabTable>
-    <div class="friend-table">
-      <p class="table"></p>
-      <div class="table-body"></div>
-    </div>
   </div>
 </template>
 
@@ -39,12 +72,10 @@ const friendList = ref<CallabTableData[]>([]);
   justify-content: center;
   .search-input {
     width: 100%;
+    padding: 30px 30px 10px;
   }
   .friend-table {
-    width: 100%;
     height: 100%;
-    overflow-x: hidden;
-    overflow-y: auto;
   }
 }
 </style>
