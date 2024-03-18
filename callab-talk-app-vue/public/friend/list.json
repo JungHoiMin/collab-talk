@@ -3,24 +3,24 @@
     "id": "dlgksruf",
     "name": "이한결",
     "nickName": "이한결",
-    "imgSource": "temp/dlgksruf.png"
+    "imgSource": "/temp/dlgksruf.png"
   },
   {
     "id": "whtjddms",
     "name": "조성은",
     "nickName": "조성은",
-    "imgSource": "temp/whtjddms.png"
+    "imgSource": "/temp/whtjddms.png"
   },
   {
     "id": "rlaqjawns",
     "name": "김범준",
     "nickName": "김범준",
-    "imgSource": "temp/rlaqjawns.png"
+    "imgSource": "/temp/rlaqjawns.png"
   },
   {
     "id": "rlawnsdus",
     "name": "김준연",
     "nickName": "김준연",
-    "imgSource": "temp/rlawnsdus.png"
+    "imgSource": "/temp/rlawnsdus.png"
   }
 ]

@@ -7,6 +7,6 @@ export const getDmList = async () => {
 };
 
 export const getRoomList = async () => {
-  const res = await axios.get("chat/room/list.json");
+  const res = await axios.get("/chat/room/list.json");
   return res.data;
 };
