@@ -4,6 +4,12 @@ import {
   getFriendListByNickName,
   IFriend,
 } from "@/apis/friendManagementView/friendManagementViewApi";
+import { Promotion } from "@element-plus/icons-vue";
+import { TUser, useChatRoomStore } from "@/store/useDirectMessageStore";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
+const chatStore = useChatRoomStore();
 
 const searchKeyword = ref("");
 
@@ -19,8 +25,15 @@ const getTableDataByKeyword = () => {
     : friendList.value;
 };
 
-const requestAddFriend = (id: string) => {
-  console.log(id);
+const requestAddFriend = async (selectedUser: TUser) => {
+  let dmId =
+    chatStore.dmList.find(({ user }) => user.id === selectedUser.id)?.id || "";
+
+  if (dmId) await router.push(`/chat/${dmId}`);
+  else {
+    dmId = await chatStore.addNewDM(selectedUser);
+    await router.push(`/chat/${dmId}`);
+  }
 };
 
 onBeforeMount(() => {
@@ -58,14 +71,16 @@ onBeforeMount(() => {
             />
           </template>
         </el-table-column>
-        <el-table-column prop="nickName" width="150px" />
-        <el-table-column width="200px">
+        <el-table-column prop="nickName" />
+        <el-table-column width="100px">
           <template #default="scope">
             <el-button
-              class="hover-button"
-              @click="requestAddFriend(scope.row.id)"
-              >친구추가요청
-            </el-button>
+              size="large"
+              circle
+              :icon="Promotion"
+              type="info"
+              @click="requestAddFriend(scope.row)"
+            />
           </template>
         </el-table-column>
       </el-table>
@@ -94,7 +109,8 @@ onBeforeMount(() => {
     justify-content: center;
     text-align: left;
     .search-result-table {
-      width: calc(100% - 60px);
+      margin-inline: 30px;
+      //width: calc(100% - 60px);
       height: calc(100% - 30px);
       .data-row {
         .hover-button {

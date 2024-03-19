@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { getDmList, getRoomList } from "@/apis/homeView/homeViewApi";
-type TUser = {
+import { addDm } from "@/apis/friendManagementView/friendManagementViewApi";
+export type TUser = {
   id: string;
   name: string;
   imgSource?: string;
@@ -31,15 +32,24 @@ export const useChatRoomStore = defineStore("chatRoomStore", {
     roomList: [],
   }),
   actions: {
-    setDMList() {
+    loadDmList() {
       getDmList().then((data) => {
         this.dmList = data;
       });
     },
-    setRoomList() {
+    loadRoomList() {
       getRoomList().then((data) => {
         this.roomList = data;
       });
+    },
+    async addNewDM(user: TUser) {
+      const uuid = await addDm(user.id);
+      this.dmList.push({
+        id: uuid,
+        user: user,
+        badge: 0,
+      });
+      return uuid;
     },
   },
 });

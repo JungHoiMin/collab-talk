@@ -12,8 +12,8 @@ const goPage = (path: string) => {
 };
 
 onBeforeMount(() => {
-  chatStore.setDMList();
-  chatStore.setRoomList();
+  chatStore.loadDmList();
+  chatStore.loadRoomList();
 });
 </script>
 

@@ -16,3 +16,9 @@ export const getFriendListByNickName = async () => {
   //     (data: IFriend) => data.nickName === keyword || data.name === keyword
   //   );
 };
+
+export const addDm = async (id: string) => {
+  // const res = await axiosInstance.post("/chat/dm", { id });
+  const res = { data: "80810d57-019b-45cd-b791-f1d29e6b115c" };
+  return res.data;
+};
