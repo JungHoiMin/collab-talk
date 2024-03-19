@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onBeforeMount, onMounted, onUnmounted, ref } from "vue";
+import { onBeforeMount, ref } from "vue";
 import { UserFilled as FriendsIcon } from "@element-plus/icons-vue";
 import { useChatRoomStore } from "@/store/useDirectMessageStore";
 import { useRouter } from "vue-router";
@@ -11,32 +11,18 @@ const goPage = (path: string) => {
   router.push(path);
 };
 
-// collapse
-const windowWidth = ref(window.innerWidth);
-const isCollapse = computed(() => {
-  return windowWidth.value < 1200;
-});
-const watchWindowInnerWidth = () => {
-  windowWidth.value = window.innerWidth;
-};
 onBeforeMount(() => {
   chatStore.setDMList();
   chatStore.setRoomList();
 });
-
-onMounted(() => {
-  window.addEventListener("resize", watchWindowInnerWidth);
-});
-
-onUnmounted(() => {
-  window.removeEventListener("resize", watchWindowInnerWidth);
-});
 </script>
 
 <template>
-  <el-menu default-active="2" class="nav-menu" :collapse="isCollapse">
+  <el-menu default-active="2" class="nav-menu">
     <el-menu-item index="1" @click="goPage('/friend')">
-      <el-icon><friends-icon /></el-icon>
+      <el-icon>
+        <friends-icon />
+      </el-icon>
       <span>친구</span>
     </el-menu-item>
     <el-sub-menu index="2">
@@ -66,7 +52,7 @@ onUnmounted(() => {
         v-for="({ id, name, imgSource, badge }, idx) in chatStore.roomList"
         :key="id"
         :index="`3-${idx}`"
-        @click="goPage(`/home/chat/${id}`)"
+        @click="goPage(`/chat/${id}`)"
       >
         <el-avatar
           class="chat-profile"
@@ -84,17 +70,17 @@ onUnmounted(() => {
 </template>
 
 <style scoped lang="scss">
-.nav-menu:not(.el-menu--collapse) {
-  width: 210px;
-}
 .nav-menu {
   user-select: none;
+
   .chat-item {
     .chat-profile {
       margin-right: 10px;
     }
+
     .chat-name {
     }
+
     .badge {
       margin-bottom: 40px;
       margin-left: 10px;
