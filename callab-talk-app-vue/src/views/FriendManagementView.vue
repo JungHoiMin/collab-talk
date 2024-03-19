@@ -98,11 +98,12 @@ onBeforeMount(() => {
 
   .search-input {
     width: 100%;
+    height: 10%;
     padding: 30px 30px 10px;
   }
   .search-result {
     width: 100%;
-    height: 100%;
+    height: 90%;
     display: flex;
     justify-content: center;
     text-align: left;
