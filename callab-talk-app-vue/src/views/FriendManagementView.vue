@@ -19,9 +19,7 @@ const friendList = ref<IFriend[]>([]);
 const getTableDataByKeyword = () => {
   const keyword = searchKeyword.value;
   tableData.value = keyword
-    ? friendList.value.filter(
-        (data) => data.name === keyword || data.nickName === keyword
-      )
+    ? friendList.value.filter((data) => data.nickName.indexOf(keyword) !== -1)
     : friendList.value;
 };
 
