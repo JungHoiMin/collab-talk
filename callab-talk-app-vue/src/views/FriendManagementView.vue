@@ -3,6 +3,7 @@ import { onBeforeMount, ref } from "vue";
 import {
   getFriendListByNickName,
   IFriend,
+  requestFriendById,
 } from "@/apis/friendManagementView/friendManagementViewApi";
 import { Promotion } from "@element-plus/icons-vue";
 import { TUser, useChatRoomStore } from "@/store/useDirectMessageStore";
@@ -13,13 +14,16 @@ const chatStore = useChatRoomStore();
 
 const searchKeyword = ref("");
 
-const tableData = ref<IFriend[]>([]);
+const filteredFriendList = ref<IFriend[]>([]);
 const friendList = ref<IFriend[]>([]);
 
 const getTableDataByKeyword = () => {
   const keyword = searchKeyword.value;
-  tableData.value = keyword
-    ? friendList.value.filter((data) => data.nickName.indexOf(keyword) !== -1)
+  filteredFriendList.value = keyword
+    ? friendList.value.filter(
+        (data) =>
+          data.nickName.indexOf(keyword) !== -1 || data.id.startsWith(keyword)
+      )
     : friendList.value;
 };
 
@@ -34,6 +38,30 @@ const requestAddFriend = async (selectedUser: TUser) => {
   }
 };
 
+const addFriendDialogVisible = ref<boolean>(false);
+const addFriendInput = ref<string>("");
+const addFriendResult = ref<{ type: string; title: string }>({
+  type: "none",
+  title: "",
+});
+const addFriendById = () => {
+  const target = addFriendInput.value;
+  addFriendResult.value = { title: "", type: "none" };
+
+  requestFriendById(addFriendInput.value).then((res) => {
+    if (res) {
+      addFriendResult.value.type = "success";
+      addFriendResult.value.title = `${target}님에게 친구 요청 성공`;
+      friendList.value.push(res);
+    } else {
+      addFriendResult.value.type = "error";
+      addFriendResult.value.title = `${target}님에게 친구 요청 실패`;
+    }
+
+    addFriendInput.value = "";
+  });
+};
+
 onBeforeMount(() => {
   getFriendListByNickName().then((data) => {
     friendList.value = data;
@@ -44,18 +72,25 @@ onBeforeMount(() => {
 
 <template>
   <div class="friend-management">
-    <el-input
-      class="search-input"
-      v-model="searchKeyword"
-      @focusout="getTableDataByKeyword()"
-      @keydown.enter="getTableDataByKeyword()"
-      size="large"
-      placeholder="검색하기"
-    />
+    <div class="new-friend">
+      <el-button class="btn-new-friend" @click="addFriendDialogVisible = true"
+        >새로운 친구 추가하기</el-button
+      >
+    </div>
+    <div class="search">
+      <el-input
+        class="search-input"
+        v-model="searchKeyword"
+        @focusout="getTableDataByKeyword()"
+        @keydown.enter="getTableDataByKeyword()"
+        size="large"
+        placeholder="검색하기"
+      />
+    </div>
     <div class="search-result">
       <el-table
         class="search-result-table"
-        :data="tableData"
+        :data="filteredFriendList"
         row-class-name="data-row"
         :show-header="false"
       >
@@ -83,6 +118,31 @@ onBeforeMount(() => {
         </el-table-column>
       </el-table>
     </div>
+    <el-dialog v-model="addFriendDialogVisible" title="친구 추가" width="500">
+      <template #footer>
+        <div class="dialog-footer">
+          <el-button @click="addFriendDialogVisible = false">닫기</el-button>
+          <el-button type="primary" @click="addFriendById()">
+            추가하기
+          </el-button>
+        </div>
+      </template>
+      <template #default>
+        <el-input
+          v-model="addFriendInput"
+          @focusout="addFriendById()"
+          @keydown.enter="addFriendById()"
+          size="large"
+          placeholder="검색하기"
+        />
+        <el-alert
+          v-if="addFriendResult.type !== 'none'"
+          :title="addFriendResult.title"
+          :type="addFriendResult.type"
+          :closable="false"
+        />
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -96,14 +156,27 @@ onBeforeMount(() => {
   align-items: center;
   justify-content: center;
 
-  .search-input {
+  .new-friend {
     width: 100%;
-    height: 10%;
-    padding: 30px 30px 10px;
+    height: 7%;
+    display: flex;
+    align-items: center;
+    .btn-new-friend {
+      margin-inline: 30px;
+    }
+  }
+  .search {
+    width: 100%;
+    height: 8%;
+    display: flex;
+    align-items: center;
+    .search-input {
+      margin-inline: 30px;
+    }
   }
   .search-result {
     width: 100%;
-    height: 90%;
+    height: 85%;
     display: flex;
     justify-content: center;
     text-align: left;

@@ -11,10 +11,21 @@ export interface IFriend {
 export const getFriendListByNickName = async () => {
   const res = await axios.get(`/friend/list.json`);
   return res.data;
-  // else
-  //   return res.data.filter(
-  //     (data: IFriend) => data.nickName === keyword || data.name === keyword
-  //   );
+};
+
+export const requestFriendById = async (id: string) => {
+  try {
+    const res = await axiosInstance.post("/friend/request", { id });
+    return res.data;
+    // return {
+    //   id: "wjddnrgus",
+    //   name: "정욱현",
+    //   nickName: "정욱현",
+    //   imgSource: "/temp/whtjddms.png",
+    // };
+  } catch (e) {
+    return false;
+  }
 };
 
 export const addDm = async (id: string) => {
