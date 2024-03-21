@@ -1,28 +1,25 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomeView from "../views/HomeView.vue";
-import FriendManagementView from "@/views/FriendManagementView.vue";
-import ChattingView from "@/views/ChattingView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "home",
-    component: HomeView,
+    component: () => import("@/views/HomeView.vue"),
     children: [
       {
         path: "/friend",
         name: "friend",
-        component: FriendManagementView,
+        component: () => import("@/views/FriendManagementView.vue"),
       },
       {
         path: "/dm/:id",
         name: "dm",
-        component: ChattingView,
+        component: () => import("@/views/ChattingView.vue"),
       },
       {
         path: "/room/:id",
         name: "room",
-        component: ChattingView,
+        component: () => import("@/views/ChattingView.vue"),
       },
     ],
   },
