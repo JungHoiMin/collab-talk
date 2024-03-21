@@ -1,15 +1,8 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
+import { onBeforeMount } from "vue";
 import { UserFilled as FriendsIcon } from "@element-plus/icons-vue";
 import { useChatRoomStore } from "@/store/useDirectMessageStore";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
 const chatStore = useChatRoomStore();
-
-const goPage = (path: string) => {
-  router.push(path);
-};
 
 onBeforeMount(() => {
   chatStore.loadDmList();
@@ -18,21 +11,20 @@ onBeforeMount(() => {
 </script>
 
 <template>
-  <el-menu default-active="2" class="nav-menu">
-    <el-menu-item index="1" @click="goPage('/friend')">
+  <el-menu default-active="/" class="nav-menu" router>
+    <el-menu-item index="/friend">
       <el-icon>
         <friends-icon />
       </el-icon>
       <span>친구</span>
     </el-menu-item>
-    <el-sub-menu index="2">
+    <el-sub-menu index="/dm">
       <template #title><span>DM</span></template>
       <el-menu-item
         class="chat-item"
-        v-for="({ id, user, badge }, idx) in chatStore.dmList"
+        v-for="{ id, user, badge } in chatStore.dmList"
         :key="id"
-        :index="`2-${idx}`"
-        @click="goPage(`/chat/${id}`)"
+        :index="`/dm/${id}`"
       >
         <el-avatar
           class="chat-profile"
@@ -45,14 +37,13 @@ onBeforeMount(() => {
         <el-badge v-if="badge > 0" :value="badge" class="badge"></el-badge>
       </el-menu-item>
     </el-sub-menu>
-    <el-sub-menu index="3">
+    <el-sub-menu index="/room">
       <template #title><span>ROOM</span></template>
       <el-menu-item
         class="chat-item"
-        v-for="({ id, name, imgSource, badge }, idx) in chatStore.roomList"
+        v-for="{ id, name, imgSource, badge } in chatStore.roomList"
         :key="id"
-        :index="`3-${idx}`"
-        @click="goPage(`/chat/${id}`)"
+        :index="`/room/${id}`"
       >
         <el-avatar
           class="chat-profile"
