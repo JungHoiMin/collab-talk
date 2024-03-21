@@ -15,8 +15,13 @@ const routes: Array<RouteRecordRaw> = [
         component: FriendManagementView,
       },
       {
-        path: "/chat/:id",
-        name: "chat",
+        path: "/dm/:id",
+        name: "dm",
+        component: ChattingView,
+      },
+      {
+        path: "/room/:id",
+        name: "room",
         component: ChattingView,
       },
     ],
