@@ -48,6 +48,8 @@ const addFriendById = () => {
   const target = addFriendInput.value;
   addFriendResult.value = { title: "", type: "none" };
 
+  if (target === "") return;
+
   requestFriendById(addFriendInput.value).then((res) => {
     if (res) {
       addFriendResult.value.type = "success";
