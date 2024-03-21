@@ -135,7 +135,7 @@ onBeforeMount(() => {
           @focusout="addFriendById()"
           @keydown.enter="addFriendById()"
           size="large"
-          placeholder="검색하기"
+          placeholder="ID를 입력하세요."
         />
         <el-alert
           v-if="addFriendResult.type !== 'none'"
