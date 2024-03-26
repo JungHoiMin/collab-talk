@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount } from "vue";
 import { UserFilled as FriendsIcon } from "@element-plus/icons-vue";
-import { useChatRoomStore } from "@/store/useDirectMessageStore";
+import { useChatRoomStore } from "@/store/useChatRoomStore";
 const chatStore = useChatRoomStore();
 
 onBeforeMount(() => {
