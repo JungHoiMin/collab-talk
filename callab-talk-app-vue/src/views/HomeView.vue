@@ -1,7 +1,7 @@
 <template>
   <collab-layout class="main">
     <template #header>
-      <img src="../assets/logo.png" alt="logo" :width="400" />
+      <collab-header />
     </template>
     <template #nav>
       <collab-nav />
@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import CollabLayout from "@/views/layout/CollabLayout.vue";
 import CollabNav from "@/components/CollabNav.vue";
+import CollabHeader from "@/components/CollabHeader.vue";
 </script>
 
 <style scoped lang="scss">
