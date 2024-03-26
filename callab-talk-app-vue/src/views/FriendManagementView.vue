@@ -6,7 +6,7 @@ import {
   requestFriendById,
 } from "@/apis/friendManagementView/friendManagementViewApi";
 import { Promotion } from "@element-plus/icons-vue";
-import { TUser, useChatRoomStore } from "@/store/useDirectMessageStore";
+import { TUser, useChatRoomStore } from "@/store/useChatRoomStore";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
@@ -31,11 +31,14 @@ const requestAddFriend = async (selectedUser: TUser) => {
   let dmId =
     chatStore.dmList.find(({ user }) => user.id === selectedUser.id)?.id || "";
 
-  if (dmId) await router.push(`/chat/${dmId}`);
-  else {
-    dmId = await chatStore.addNewDM(selectedUser);
-    await router.push(`/chat/${dmId}`);
-  }
+  if (!dmId) dmId = await chatStore.addNewDM(selectedUser);
+
+  await router.push({
+    name: "dm",
+    params: {
+      id: dmId,
+    },
+  });
 };
 
 const addFriendDialogVisible = ref<boolean>(false);

@@ -21,13 +21,13 @@ type TRoom = {
   badge: number;
 };
 
-type TChatRoomList = {
+type TChatRoomState = {
   dmList: TDM[];
   roomList: TRoom[];
 };
 
 export const useChatRoomStore = defineStore("chatRoomStore", {
-  state: (): TChatRoomList => ({
+  state: (): TChatRoomState => ({
     dmList: [],
     roomList: [],
   }),

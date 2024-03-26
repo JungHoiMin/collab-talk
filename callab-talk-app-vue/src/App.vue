@@ -17,4 +17,19 @@ body,
   height: 100%;
   margin: 0;
 }
+
+.collab-user-select-none {
+  user-select: none;
+}
+.collab-click-cursor {
+  cursor: pointer;
+}
+
+.is-checked * {
+  background-color: #dce0e5;
+  color: darkgray;
+}
+.is-checked:hover * {
+  background-color: inherit;
+}
 </style>

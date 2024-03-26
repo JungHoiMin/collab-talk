@@ -27,8 +27,6 @@
     width: auto;
     background-color: red;
     height: 11vh;
-    display: flex;
-    align-items: center;
     padding-inline: 30px;
   }
 

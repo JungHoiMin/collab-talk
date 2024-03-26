@@ -1,9 +1,14 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import CollabAlarm from "@/components/notification/CollabNotification.vue";
+</script>
 
 <template>
-  <div class="collab-header">
-    <img class="logo" alt="logo" src="@/assets/logo.png" />
-    <div>sdfds</div>
+  <div class="collab-header collab-user-select-none">
+    <img class="logo collab-click-cursor" alt="logo" src="@/assets/logo.png" />
+    <div>
+      <collab-alarm />
+      <button>자기 프로필</button>
+    </div>
   </div>
 </template>
 
@@ -13,7 +18,6 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-inline: 20px;
   .logo {
     width: 300px;
     height: auto;
