@@ -1,30 +1,26 @@
 <script setup lang="ts">
 import { onBeforeMount, ref } from "vue";
-import {
-  getFriendListByNickName,
-  IFriend,
-  requestFriendById,
-} from "@/apis/friendManagementView/friendManagementViewApi";
 import { Promotion } from "@element-plus/icons-vue";
 import { TUser, useChatRoomStore } from "@/store/useChatRoomStore";
 import { useRouter } from "vue-router";
+import { TFriend, useFriendStore } from "@/store/useFriendStore";
 
 const router = useRouter();
 const chatStore = useChatRoomStore();
+const friendStore = useFriendStore();
 
 const searchKeyword = ref("");
 
-const filteredFriendList = ref<IFriend[]>([]);
-const friendList = ref<IFriend[]>([]);
+const filteredFriendList = ref<TFriend[]>([]);
 
 const getTableDataByKeyword = () => {
   const keyword = searchKeyword.value;
   filteredFriendList.value = keyword
-    ? friendList.value.filter(
+    ? friendStore.friendList.filter(
         (data) =>
           data.nickName.indexOf(keyword) !== -1 || data.id.startsWith(keyword)
       )
-    : friendList.value;
+    : friendStore.friendList;
 };
 
 const requestAddFriend = async (selectedUser: TUser) => {
@@ -43,34 +39,52 @@ const requestAddFriend = async (selectedUser: TUser) => {
 
 const addFriendDialogVisible = ref<boolean>(false);
 const addFriendInput = ref<string>("");
-const addFriendResult = ref<{ type: string; title: string }>({
+const addFriendResult = ref<{
+  type: "warning" | "success" | "error" | "none";
+  title: string;
+}>({
   type: "none",
   title: "",
 });
 const addFriendById = () => {
-  const target = addFriendInput.value;
+  const id = addFriendInput.value;
   addFriendResult.value = { title: "", type: "none" };
 
-  if (target === "") return;
+  if (id === "") return;
 
-  requestFriendById(addFriendInput.value).then((res) => {
-    if (res) {
-      addFriendResult.value.type = "success";
-      addFriendResult.value.title = `${target}님에게 친구 요청 성공`;
-      friendList.value.push(res);
-    } else {
-      addFriendResult.value.type = "error";
-      addFriendResult.value.title = `${target}님에게 친구 요청 실패`;
-    }
-
-    addFriendInput.value = "";
-  });
+  if (friendStore.isAlreadyExisting("sent", id)) {
+    addFriendResult.value = {
+      type: "warning",
+      title: `${id}님에게 이미 친구요청을 한 상태입니다.`,
+    };
+  } else if (friendStore.isAlreadyExisting("received", id)) {
+    friendStore.acceptReceivedFriendRequest(id);
+    addFriendResult.value = {
+      type: "success",
+      title: `${id}님이 이미 친구요청을 해서 수락합니다.`,
+    };
+  } else if (friendStore.isAlreadyExisting("friend", id)) {
+    addFriendResult.value = {
+      type: "warning",
+      title: `${id}님과 이미 친구입니다.`,
+    };
+  } else {
+    friendStore.sendFriendRequest(addFriendInput.value).then((res) => {
+      if (res) {
+        addFriendResult.value.type = "success";
+        addFriendResult.value.title = `${id}님에게 친구 요청 성공`;
+      } else {
+        addFriendResult.value.type = "error";
+        addFriendResult.value.title = `${id}님에게 친구 요청 실패`;
+      }
+    });
+  }
+  addFriendInput.value = "";
 };
 
 onBeforeMount(() => {
-  getFriendListByNickName().then((data) => {
-    friendList.value = data;
-    getTableDataByKeyword();
+  friendStore.loadFriendList().then((value) => {
+    if (value) getTableDataByKeyword();
   });
 });
 </script>
@@ -78,9 +92,9 @@ onBeforeMount(() => {
 <template>
   <div class="friend-management">
     <div class="new-friend">
-      <el-button class="btn-new-friend" @click="addFriendDialogVisible = true"
-        >새로운 친구 추가하기</el-button
-      >
+      <el-button class="btn-new-friend" @click="addFriendDialogVisible = true">
+        새로운 친구 추가하기
+      </el-button>
     </div>
     <div class="search">
       <el-input

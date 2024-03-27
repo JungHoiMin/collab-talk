@@ -29,6 +29,7 @@ export const useNotificationStore = defineStore("notificationStore", {
       getNotificationList().then((data: TNotificationState) => {
         this.badge = data.badge;
         this.notificationData = data.notificationData;
+        console.log(data);
       });
     },
     checkNotification(id: string) {

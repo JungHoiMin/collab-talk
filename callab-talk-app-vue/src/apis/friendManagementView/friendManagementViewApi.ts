@@ -1,21 +1,14 @@
 import axios from "axios";
 import axiosInstance from "@/apis";
 
-export interface IFriend {
-  id: string;
-  name: string;
-  nickName: string;
-  imgSource: string;
-}
-
-export const getFriendListByNickName = async () => {
+export const getFriendList = async () => {
   const res = await axios.get(`/friend/list.json`);
   return res.data;
 };
 
-export const requestFriendById = async (id: string) => {
+export const sendFriendRequestById = async (id: string) => {
   try {
-    const res = await axiosInstance.post("/friend/request", { id });
+    const res = await axiosInstance.post("/friend/send", { id });
     return res.data;
     // return {
     //   id: "wjddnrgus",
@@ -24,7 +17,16 @@ export const requestFriendById = async (id: string) => {
     //   imgSource: "/temp/whtjddms.png",
     // };
   } catch (e) {
-    return false;
+    return null;
+  }
+};
+
+export const acceptReceivedFriendRequestById = async (id: string) => {
+  try {
+    const res = await axiosInstance.patch("/friend/accept", { id });
+    return res.data;
+  } catch (e) {
+    return null;
   }
 };
 
