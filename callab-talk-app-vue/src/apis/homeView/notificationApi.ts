@@ -8,10 +8,20 @@ export const getNotificationList = async () => {
   return {
     badge: res.data.badge,
     notificationData: res.data.notificationData.map((alarm: any) => {
-      const { strDate, ...data } = alarm;
+      const { created_at, ...data } = alarm;
+      const strToDate = (str: string) => {
+        const yyyy = +str.substring(0, 4);
+        const mm = +str.substring(5, 7);
+        const dd = +str.substring(8, 10);
+        const hh = +str.substring(11, 13);
+        const nn = +str.substring(14, 16);
+        const ss = +str.substring(17, 19);
+        const zzz = +str.substring(20, 23);
+        return new Date(yyyy, mm, dd, hh, nn, ss, zzz);
+      };
       return {
         ...data,
-        created_at: new Date(strDate),
+        created_at: strToDate(created_at),
       };
     }),
   };
