@@ -1,22 +1,30 @@
 import { defineStore } from "pinia";
 import {
   acceptReceivedFriendRequestById,
+  cancelSentFriendRequestById,
   getFriendList,
+  isExistsRequestByFriendId,
+  rejectReceivedFriendRequestById,
   sendFriendRequestById,
+  TRequestFriendType,
 } from "@/apis/friendManagementView/friendManagementViewApi";
+import { useNotificationStore } from "@/store/useNotificationStore";
 
 export type TFriend = {
   id: string;
-  name: string;
   nickName: string;
   imgSource: string;
+};
+
+export type TFriendRequest = TFriend & {
+  requested_at: Date;
 };
 
 export type TFriendState = {
   isLoad: boolean;
   friendList: TFriend[];
-  receivedFriendRequestList: TFriend[];
-  sentFriendRequestList: TFriend[];
+  receivedFriendRequestList: TFriendRequest[];
+  sentFriendRequestList: TFriendRequest[];
 };
 
 export const useFriendStore = defineStore("friendStore", {
@@ -28,21 +36,14 @@ export const useFriendStore = defineStore("friendStore", {
   }),
   getters: {
     isAlreadyExisting:
-      (state) => (type: "friend" | "received" | "sent", id: string) => {
-        let list: TFriend[];
-        switch (type) {
-          case "friend":
-            list = state.friendList;
-            break;
-          case "received":
-            list = state.receivedFriendRequestList;
-            break;
-          case "sent":
-            list = state.sentFriendRequestList;
-            break;
+      (state) => async (type: TRequestFriendType, friendId: string) => {
+        if (type === "friend") {
+          return (
+            state.friendList.findIndex((value) => value.id === friendId) !== -1
+          );
+        } else {
+          return await isExistsRequestByFriendId(type, friendId);
         }
-        const idx = list.findIndex((value) => value.id === id);
-        return idx !== -1;
       },
   },
   actions: {
@@ -50,34 +51,62 @@ export const useFriendStore = defineStore("friendStore", {
       if (!this.isLoad) {
         const data = await getFriendList();
         if (data) {
+          const notificationStore = useNotificationStore();
+
           this.isLoad = true;
           this.friendList = data.friendList;
-          this.sentFriendRequestList = data.sentFriendRequestList;
-          this.receivedFriendRequestList = data.receivedFriendRequestList;
+          this.sentFriendRequestList =
+            data.sentFriendRequest.sentFriendRequestList;
+          this.receivedFriendRequestList =
+            data.receivedFriendRequest.receivedFriendRequestList;
+
+          notificationStore.receivedFriendRequestBadge =
+            data.receivedFriendRequest.badge;
           return true;
         }
       }
       return false;
     },
-    async acceptReceivedFriendRequest(id: string) {
-      // TODO::서버에 요청
-      const friend: TFriend | null = await acceptReceivedFriendRequestById(id);
+    async acceptReceivedFriendRequest(requestId: string) {
+      const friend: TFriend | null = await acceptReceivedFriendRequestById(
+        requestId
+      );
       if (friend) {
         this.friendList.push(friend);
         this.receivedFriendRequestList = this.receivedFriendRequestList.filter(
-          (value) => value.id !== id
+          (value) => value.id !== requestId
         );
       }
       return true;
     },
-    async sendFriendRequest(id: string) {
-      const friend: TFriend | null = await sendFriendRequestById(id);
-      if (friend) {
-        this.sentFriendRequestList.push(friend);
+    rejectReceivedFriendRequest(requestId: string) {
+      rejectReceivedFriendRequestById(requestId).then(() => {
+        this.receivedFriendRequestList = this.receivedFriendRequestList.filter(
+          (value) => value.id !== requestId
+        );
+
+        const notificationStore = useNotificationStore();
+        if (notificationStore.receivedFriendRequestBadge)
+          notificationStore.receivedFriendRequestBadge--;
+      });
+    },
+    async sendFriendRequest(friendId: string) {
+      const request: TFriendRequest | null = await sendFriendRequestById(
+        friendId
+      );
+      if (request) {
+        this.sentFriendRequestList.push(request);
         return true;
       } else {
         return false;
       }
+    },
+    cancelSentFriendRequest(requestId: string) {
+      cancelSentFriendRequestById(requestId).then(() => {
+        this.sentFriendRequestList = this.sentFriendRequestList.filter(
+          (value) => value.id !== requestId
+        );
+      });
     },
   },
 });

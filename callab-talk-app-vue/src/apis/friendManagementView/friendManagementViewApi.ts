@@ -1,14 +1,19 @@
 import axios from "axios";
 import axiosInstance from "@/apis";
+import { TFriend, TFriendRequest } from "@/store/useFriendStore";
+
+export type TRequestFriendType = "friend" | "received" | "sent";
 
 export const getFriendList = async () => {
   const res = await axios.get(`/friend/list.json`);
   return res.data;
 };
 
-export const sendFriendRequestById = async (id: string) => {
+export const sendFriendRequestById = async (
+  friendId: string
+): Promise<TFriendRequest | null> => {
   try {
-    const res = await axiosInstance.post("/friend/send", { id });
+    const res = await axiosInstance.post("/friend/send", { friendId });
     return res.data;
     // return {
     //   id: "wjddnrgus",
@@ -20,13 +25,42 @@ export const sendFriendRequestById = async (id: string) => {
     return null;
   }
 };
+export const cancelSentFriendRequestById = async (
+  requestId: string
+): Promise<void> => {
+  await axiosInstance.delete(`/friend/cancel/${requestId}`);
+  return;
+};
 
-export const acceptReceivedFriendRequestById = async (id: string) => {
+export const acceptReceivedFriendRequestById = async (
+  requestId: string
+): Promise<TFriend | null> => {
   try {
-    const res = await axiosInstance.patch("/friend/accept", { id });
+    const res = await axiosInstance.patch("/friend/accept", { requestId });
     return res.data;
   } catch (e) {
     return null;
+  }
+};
+
+export const rejectReceivedFriendRequestById = async (
+  requestId: string
+): Promise<void> => {
+  await axiosInstance.patch("/friend/reject", { requestId });
+  return;
+};
+
+export const isExistsRequestByFriendId = async (
+  type: TRequestFriendType,
+  friendId: string
+): Promise<boolean> => {
+  try {
+    const res = await axiosInstance.get(
+      `/friend/request?type=${type}&id=${friendId}`
+    );
+    return res.data;
+  } catch (e) {
+    return false;
   }
 };
 

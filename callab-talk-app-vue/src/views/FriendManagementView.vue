@@ -4,10 +4,13 @@ import { Promotion } from "@element-plus/icons-vue";
 import { TUser, useChatRoomStore } from "@/store/useChatRoomStore";
 import { useRouter } from "vue-router";
 import { TFriend, useFriendStore } from "@/store/useFriendStore";
+import CollabNewFriend from "@/components/friend/CollabNewFriend.vue";
+import { useNotificationStore } from "@/store/useNotificationStore";
 
 const router = useRouter();
 const chatStore = useChatRoomStore();
 const friendStore = useFriendStore();
+const notificationStore = useNotificationStore();
 
 const searchKeyword = ref("");
 
@@ -38,49 +41,6 @@ const requestAddFriend = async (selectedUser: TUser) => {
 };
 
 const addFriendDialogVisible = ref<boolean>(false);
-const addFriendInput = ref<string>("");
-const addFriendResult = ref<{
-  type: "warning" | "success" | "error" | "none";
-  title: string;
-}>({
-  type: "none",
-  title: "",
-});
-const addFriendById = () => {
-  const id = addFriendInput.value;
-  addFriendResult.value = { title: "", type: "none" };
-
-  if (id === "") return;
-
-  if (friendStore.isAlreadyExisting("sent", id)) {
-    addFriendResult.value = {
-      type: "warning",
-      title: `${id}님에게 이미 친구요청을 한 상태입니다.`,
-    };
-  } else if (friendStore.isAlreadyExisting("received", id)) {
-    friendStore.acceptReceivedFriendRequest(id);
-    addFriendResult.value = {
-      type: "success",
-      title: `${id}님이 이미 친구요청을 해서 수락합니다.`,
-    };
-  } else if (friendStore.isAlreadyExisting("friend", id)) {
-    addFriendResult.value = {
-      type: "warning",
-      title: `${id}님과 이미 친구입니다.`,
-    };
-  } else {
-    friendStore.sendFriendRequest(addFriendInput.value).then((res) => {
-      if (res) {
-        addFriendResult.value.type = "success";
-        addFriendResult.value.title = `${id}님에게 친구 요청 성공`;
-      } else {
-        addFriendResult.value.type = "error";
-        addFriendResult.value.title = `${id}님에게 친구 요청 실패`;
-      }
-    });
-  }
-  addFriendInput.value = "";
-};
 
 onBeforeMount(() => {
   friendStore.loadFriendList().then((value) => {
@@ -92,9 +52,16 @@ onBeforeMount(() => {
 <template>
   <div class="friend-management">
     <div class="new-friend">
-      <el-button class="btn-new-friend" @click="addFriendDialogVisible = true">
-        새로운 친구 추가하기
-      </el-button>
+      <el-badge
+        class="btn-new-friend-badge"
+        :value="notificationStore.receivedFriendRequestBadge"
+        :max="99"
+        :show-zero="false"
+      >
+        <el-button @click="addFriendDialogVisible = true">
+          새로운 친구
+        </el-button>
+      </el-badge>
     </div>
     <div class="search">
       <el-input
@@ -137,31 +104,7 @@ onBeforeMount(() => {
         </el-table-column>
       </el-table>
     </div>
-    <el-dialog v-model="addFriendDialogVisible" title="친구 추가" width="500">
-      <template #footer>
-        <div class="dialog-footer">
-          <el-button @click="addFriendDialogVisible = false">닫기</el-button>
-          <el-button type="primary" @click="addFriendById()">
-            추가하기
-          </el-button>
-        </div>
-      </template>
-      <template #default>
-        <el-input
-          v-model="addFriendInput"
-          @focusout="addFriendById()"
-          @keydown.enter="addFriendById()"
-          size="large"
-          placeholder="ID를 입력하세요."
-        />
-        <el-alert
-          v-if="addFriendResult.type !== 'none'"
-          :title="addFriendResult.title"
-          :type="addFriendResult.type"
-          :closable="false"
-        />
-      </template>
-    </el-dialog>
+    <CollabNewFriend v-model="addFriendDialogVisible" />
   </div>
 </template>
 
@@ -180,7 +123,7 @@ onBeforeMount(() => {
     height: 7%;
     display: flex;
     align-items: center;
-    .btn-new-friend {
+    .btn-new-friend-badge {
       margin-inline: 30px;
     }
   }

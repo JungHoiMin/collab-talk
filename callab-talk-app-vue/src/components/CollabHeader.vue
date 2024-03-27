@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import CollabAlarm from "@/components/notification/CollabNotification.vue";
+import CollabNotification from "@/components/notification/CollabNotification.vue";
 </script>
 
 <template>
   <div class="collab-header collab-user-select-none">
     <img class="logo collab-click-cursor" alt="logo" src="@/assets/logo.png" />
     <div>
-      <collab-alarm />
+      <collab-notification />
       <button>자기 프로필</button>
     </div>
   </div>

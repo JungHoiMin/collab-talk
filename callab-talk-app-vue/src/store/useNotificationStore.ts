@@ -16,12 +16,14 @@ export type TNotification = {
 
 export type TNotificationState = {
   badge: number;
+  receivedFriendRequestBadge?: number;
   notificationData: TNotification[];
 };
 
 export const useNotificationStore = defineStore("notificationStore", {
   state: (): TNotificationState => ({
     badge: 0,
+    receivedFriendRequestBadge: 0,
     notificationData: [],
   }),
   actions: {

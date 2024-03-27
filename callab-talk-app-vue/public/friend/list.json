@@ -25,6 +25,31 @@
       "imgSource": "/temp/rlawnsdus.png"
     }
   ],
-  "sentFriendRequestList": [],
-  "receivedFriendRequestList": []
+  "sentFriendRequest": {
+    "sentFriendRequestList": [
+      {
+        "id": "bae7bafc-f05d-4ca0-bc63-e7212485e28d",
+        "nickName": "이영환",
+        "imgSource": "/temp/rlaqjawns.png",
+        "requested_at": "2024-03-23 11:42:01.325"
+      },
+      {
+        "id": "776b14b8-d3bc-4d36-b53f-dae06063fe26",
+        "nickName": "정욱현",
+        "imgSource": "/temp/dlgksruf.png",
+        "requested_at": "2024-03-24 15:11:02.005"
+      }
+    ]
+  },
+  "receivedFriendRequest": {
+    "badge": 1,
+    "receivedFriendRequestList": [
+      {
+        "id": "03ee027e-60d3-4003-a97f-ec4eb4211a6a",
+        "nickName": "강준혁",
+        "imgSource": "/temp/rlawnsdus.png",
+        "requested_at": "2024-03-22 16:01:32.995"
+      }
+    ]
+  }
 }
